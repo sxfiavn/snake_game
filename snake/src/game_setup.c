@@ -14,6 +14,13 @@
 #define DIGIT_START 0x30
 #define DIGIT_END 0x39
 
+extern int g_game_over;  // 1 if game is over, 0 otherwise
+extern int g_score;      // game score: 1 point for every food eaten
+extern enum input_key g_direction; // direction of the snake
+extern int g_snake_column; //horizontal position of snake
+extern int g_snake_row; //vertical position of snake
+
+
 /** Initializes the board with walls around the edge of the board.
  *
  * Modifies values pointed to by cells_p, width_p, and height_p and initializes
@@ -73,8 +80,10 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
                                        size_t* height_p, snake_t* snake_p,
                                        char* board_rep) {
     // TODO: implement!
+  
+   
+    return initialize_default_board(cells_p, width_p, height_p);
 
-    return INIT_SUCCESS;
 }
 
 /** Takes in a string `compressed` and initializes values pointed to by

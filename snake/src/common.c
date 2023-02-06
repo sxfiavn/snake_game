@@ -7,6 +7,9 @@
 // Definition of global variables for game status.
 int g_game_over;
 int g_score;
+enum input_key g_direction;
+int g_snake_column;
+int g_snake_row;
 
 /** Sets the seed for random number generation.
  * Arguments:

@@ -35,6 +35,9 @@ enum input_key { INPUT_UP, INPUT_DOWN, INPUT_LEFT, INPUT_RIGHT, INPUT_NONE };
  */
 extern int g_game_over;  // 1 if game is over, 0 otherwise
 extern int g_score;      // game score: 1 point for every food eaten
+extern enum input_key g_direction; // direction of the snake
+extern int g_snake_column; //horizontal position of snake
+extern int g_snake_row; //vertical position of snake
 
 /** Snake struct. This struct is not needed until part 2!
  * Fields:
