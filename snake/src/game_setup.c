@@ -81,7 +81,6 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
                                        char* board_rep) {
     // TODO: implement!
   
-   
     return initialize_default_board(cells_p, width_p, height_p);
 
 }
