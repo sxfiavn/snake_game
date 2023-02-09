@@ -8,6 +8,12 @@
 #include "linked_list.h"
 #include "mbstrings.h"
 
+extern int g_game_over;  // 1 if game is over, 0 otherwise
+extern int g_score;      // game score: 1 point for every food eaten
+extern enum input_key g_direction; // direction of the snake
+extern int g_snake_column; //horizontal position of snake
+extern int g_snake_row; //vertical position of snake
+
 /** Updates the game by a single step, and modifies the game information
  * accordingly. Arguments:
  *  - cells: a pointer to the first integer in an array of integers representing
@@ -29,6 +35,23 @@ void update(int* cells, size_t width, size_t height, snake_t* snake_p,
     // walls, so it does not handle the case where a snake runs off the board.
 
     // TODO: implement!
+
+
+    if (cells[20 * g_snake_row + g_snake_column + 1] == FLAG_WALL) {
+        g_game_over = 1;
+    }
+    else {
+    //first update board info, then snake position
+        //update previous bitflag to 0b0001 (plain cell)
+            //update new cell with bitflag 0b0010 (snake)
+        cells[20 * g_snake_row + g_snake_column] = FLAG_PLAIN_CELL;
+        cells[20 * g_snake_row + g_snake_column + 1] = FLAG_SNAKE;
+        
+        
+        //update snake position
+        g_snake_column = g_snake_column + 1;
+            // g_snake_row stays the same, only moving to the right, not up/down
+    }
 }
 
 /** Sets a random space on the given board to food.
