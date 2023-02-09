@@ -5,11 +5,11 @@
 // TODO: define global variables needed for your snake! (part 1A)
 
 // Definition of global variables for game status.
-extern g_game_over = 0;
-extern g_score = 0;
-extern input_key g_direction = ;
-extern g_snake_column = 2;
-extern g_snake_rowm = 2;
+extern int g_game_over = 0;
+extern int g_score = 0;
+extern enum input_key g_direction = INPUT_RIGHT;
+extern int g_snake_column = 2;
+extern int g_snake_rowm = 2;
 
 /** Sets the seed for random number generation.
  * Arguments:
