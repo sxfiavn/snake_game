@@ -14,7 +14,6 @@
 #define DIGIT_START 0x30
 #define DIGIT_END 0x39
 
-
 /** Initializes the board with walls around the edge of the board.
  *
  * Modifies values pointed to by cells_p, width_p, and height_p and initializes
