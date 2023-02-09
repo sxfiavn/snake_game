@@ -95,5 +95,74 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
                                             size_t* height_p, snake_t* snake_p,
                                             char* compressed) {
     // TODO: implement!
+
+
+    // Keep Snake Count
+    int s_count = 0;
+
+    // Search for substring for number of rows and columns
+    char e_x = strchr(compressed, 'x');  
+    int index_x = (int)(e_x - string); // Index for 'x'
+
+    char e_y = strchr(compressed, '|');
+    int index_y = (int)(e_y - string); // Index for first '|'
+    
+    int row_n = substr(compressed, 0, e_x)
+    int column_n = substr(compressed, 0, e_y)
+
+    // Variables to use with the loops to keep track of compressed notation
+    // In the end row_n need to match row_count (same for column)
+    int row_count = 0
+    int column_count = 0
+
+
+    for (int i = 0; i < len(compressed); ++i) {
+        if (compressed[i] == 'S') {
+            s_count++;
+        }
+        else if (compressed[i] == '|') {
+            row_count++;
+        }
+        else if ((compressed[i] == 'W') || (compressed[i] == 'E') )
+    }
+
+    if (s_count != 1){
+        return INIT_ERR_WRONG_SNAKE_NUM;
+    }
+
+    if ((row_count != row_n) || (column_count != column_n)) {
+        return INIT_ERR_INCORRECT_DIMENSIONS
+    }
+
+        for (int i = 0; i < 20; ++i) {
+        cells[i] = FLAG_WALL;
+        cells[i + (20 * (10 - 1))] = FLAG_WALL;
+    }
+    // Left and right edges:
+    for (int i = 0; i < 10; ++i) {
+        cells[i * 20] = FLAG_WALL;
+        cells[i * 20 + 20 - 1] = FLAG_WALL;
+    }
+
+    // Add snake
+    cells[20 * 2 + 2] = FLAG_SNAKE;
+
+    //Potential Errors:
+
+        // return INIT_ERR_INCORRECT_DIMENSIONS;
+            //-> If more/less rows than specified in between compressed[0] and the first x is (rows are separated by | character)
+                // Can count how many | characters to count number of rows
+            //-> If more/less columns that specified in between the first x and the first |. 
+                // Count all of the numbers after each | 
+                // TODO: figure out how to count each row (count number after every W and E? )
+        
+        // return INIT_ERR_WRONG_SNAKE_NUM;
+            // If more/less than 1 appearance of the letter S in the whole board
+                
+        //INIT_ERR_BAD_CHAR
+            // If any characters that are not: B, x, 1,2,3,4,5,6,7,8,9,0, W, E, S  appear on the board. 
+
+        // Else: init success. 
+
     return INIT_UNIMPLEMENTED;
 }
