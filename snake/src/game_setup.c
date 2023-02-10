@@ -179,7 +179,7 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
             }
         }
 
-        else if ((comp < DIGIT_START) || (comp < DIGIT_END)) { 
+        else if (!((comp < DIGIT_START) || (comp < DIGIT_END))) { 
             return INIT_ERR_BAD_CHAR; 
         }
         
