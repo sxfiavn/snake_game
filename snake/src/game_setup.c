@@ -77,7 +77,7 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
         return initialize_default_board(cells_p, width_p, height_p);
     }
     else {
-        return decompress_board_str(cells_p, width_p, height_p, board_rep);
+        return decompress_board_str(cells_p, width_p, height_p, snake_p, board_rep);
     }
 }
 
