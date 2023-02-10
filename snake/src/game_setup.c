@@ -78,11 +78,6 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
 
 }
 
-int index_return(size_t* row, size_t* column, size_t* total_columns) {
-    return (total_columns * row) + column;
-}
-
-
 /** Takes in a string `compressed` and initializes values pointed to by
  * cells_p, width_p, and height_p accordingly. Arguments:
  *      - cells_p: a pointer to the pointer representing the cells array
@@ -99,27 +94,13 @@ int index_return(size_t* row, size_t* column, size_t* total_columns) {
 enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
                                             size_t* height_p, snake_t* snake_p,
                                             char* compressed) {
-    // TODO: implement!
-
     // Keep Snake Count
     int s_count = 0;
-
-    // Row and Column values based on B?x? values.
-    // int *height_p = 0;
-    // int *width_p = 0;
 
     // Variables to use with the loops to keep track of compressed notation
         // In the end row_n need to match row_count (same for column)
     int row_count = 0;
     int column_count = 0;
-
-    //Pointer to keep track of expanded W and E (acts like an array)
-    int array_board_maker[sizeof(compressed)]; 
-    *cells_p = array_board_maker;
-    int where_in_array = 0;
-    // I know im using more space than what is necessary, but an array is the best option
-
-
 
     for (size_t i = 0; i < (strlen(compressed) - 1); ++i) {
 
@@ -134,41 +115,77 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
         else if (comp == 'x') {
             *width_p = s_number;
         }
-        else if (comp == 'S') {
-            s_count = s_count + s_number; 
-        }
-        else if (comp == '|') {
-            row_count++;
-        }
-        else if ((comp == 'W') || (comp == 'E') ) {
-            column_count = column_count + s_number; // same as for 'S'.
-            
-            for (int a = 0; a < s_number; ++a) {
-                array_board_maker[where_in_array] = comp;
-                where_in_array++;
-            }
-        }
-       else if ((comp != '0') || (comp != '1') || (comp != '2') || (comp != '3') || (comp != '4') || (comp != '5') || (comp != '6') || (comp != '7') || (comp != '8') || (comp != '9')) { 
-            return INIT_ERR_BAD_CHAR; // Could also check HEX numbers
-        }
+
     }
 
+    //Pointer to keep track of expanded W and E (acts like an array)
+    int* array_board_maker = malloc(*height_p * *width_p * sizeof(int)); 
+    *cells_p = array_board_maker;
+    int where_in_array = 0;
 
-    for (size_t i = 0; i < (*height_p - 1); ++i) { // for each row
+    for (size_t i = 0; i < (strlen(compressed) - 1); ++i) {
 
-        for (size_t z = 0; z < (*width_p - 1); ++z) { // go to each column
-            
-            int curr_cell_index = index_return(i, z, *width_p);
-            int curr_cell = array_board_maker[curr_cell_index];
+        char comp = compressed[i]; //getting the value at this address
+        int s_number = atoi(&compressed[i+1]); //compressed is a pointer -> check if it works 
 
-            if (curr_cell == 'W') {
-                curr_cell = FLAG_WALL;
+        if (comp == 'S') {
+            s_count = s_count + s_number;
+
+            if (s_count != 1){ //we know it cant be smaller than 1
+                return INIT_ERR_WRONG_SNAKE_NUM;
             }
-            else if (curr_cell == 'E') {
-                curr_cell = FLAG_PLAIN_CELL;
+            else {
+                for (int a = 0; a < s_number; ++a) {
+                array_board_maker[where_in_array] = FLAG_SNAKE;
+                where_in_array++;
+                }
             }
         }
 
+        else if (comp == 'W') {
+            column_count = column_count + s_number; // same as for 'S'.
+            
+            if (column_count > (int)*width_p) {
+                return INIT_ERR_INCORRECT_DIMENSIONS;   // not handling if its smaller than column_n
+            }
+            else {
+                for (int a = 0; a < s_number; ++a) {
+                    array_board_maker[where_in_array] = FLAG_WALL;
+                    where_in_array++;
+                }
+            }
+        }
+
+        else if (comp == 'E') {
+            column_count = column_count + s_number; // same as for 'S'.
+            
+            if (column_count > (int)*width_p) {
+                return INIT_ERR_INCORRECT_DIMENSIONS;   // not handling if its smaller than column_n
+            }
+            else {
+                for (int a = 0; a < s_number; ++a) {
+                    array_board_maker[where_in_array] = FLAG_PLAIN_CELL;
+                    where_in_array++;
+                }
+            }
+        }
+
+        else if (comp == '|') {
+            row_count++;
+
+            if (row_count > (int)*height_p) {
+                return INIT_ERR_INCORRECT_DIMENSIONS;
+            }
+        }
+
+        else if ((comp < DIGIT_START) || (comp < DIGIT_END)) { 
+            return INIT_ERR_BAD_CHAR; 
+        }
+        
+    }
+
+    if ((column_count < (int)*width_p) || (row_count < (int)*height_p)) {
+        return INIT_ERR_INCORRECT_DIMENSIONS;
     }
 
     return INIT_SUCCESS;
