@@ -36,16 +36,15 @@ void update(int* cells, size_t width, size_t height, snake_t* snake_p,
 
     // TODO: implement!
 
-
-    if (cells[20 * g_snake_row + g_snake_column + 1] == FLAG_WALL) {
+    if (cells[width * g_snake_row + g_snake_column + 1] == FLAG_WALL) {
         g_game_over = 1;
     }
     else {
     //first update board info, then snake position
         //update previous bitflag to 0b0001 (plain cell)
             //update new cell with bitflag 0b0010 (snake)
-        cells[20 * g_snake_row + g_snake_column] = FLAG_PLAIN_CELL;
-        cells[20 * g_snake_row + g_snake_column + 1] = FLAG_SNAKE;
+        cells[width * g_snake_row + g_snake_column] = FLAG_PLAIN_CELL;
+        cells[width * g_snake_row + g_snake_column + 1] = FLAG_SNAKE;
         
         
         //update snake position

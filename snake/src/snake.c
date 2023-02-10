@@ -135,6 +135,6 @@ int main(int argc, char** argv) {
         usleep(100000);
         update(cells, width, height, NULL, INPUT_NONE, 0);
         render_game(cells, width, height);
-        end_game(cells, width, height, &snake);
     }
+    end_game(cells, width, height, &snake);
 }

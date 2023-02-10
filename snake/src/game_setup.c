@@ -111,7 +111,9 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
             *width_p = s_number;
         }
         
-        // check if either null or 
+        if (((int)*height_p == 0) || ((int)*width_p == 0)) {
+            return INIT_ERR_INCORRECT_DIMENSIONS;
+        }
 
     }
 
@@ -179,7 +181,7 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
             }
         }
 
-        else if (!((comp < DIGIT_START) || (comp < DIGIT_END))) { 
+        else if (((comp < DIGIT_START) || (comp < DIGIT_END))) { 
             return INIT_ERR_BAD_CHAR; 
         }
         
