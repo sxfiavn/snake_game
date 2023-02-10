@@ -94,29 +94,27 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
 enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
                                             size_t* height_p, snake_t* snake_p,
                                             char* compressed) {
-    // Keep Snake Count
-    int s_count = 0;
-
-    // Variables to use with the loops to keep track of compressed notation
-        // In the end row_n need to match row_count (same for column)
-    int row_count = 0;
-    int column_count = 0;
+    
 
     for (size_t i = 0; i < (strlen(compressed) - 1); ++i) {
 
-        char comp = compressed[i]; //getting the value at this address
-
-        // &compressed[i+1]
-        int s_number = atoi(&compressed[i+1]); //compressed is a pointer -> check if it works 
+        char comp = compressed[i]; // getting the value at this address
+        int s_number = atoi(&compressed[i+1]); //pointer to the first number right after the current character. 
 
         if (comp == 'B') {
-            *height_p = s_number;
+            *height_p = s_number/2;
         }
         else if (comp == 'x') {
             *width_p = s_number;
         }
+        
+        // check if either null or 
 
     }
+
+    int snake_count = 0; 
+    int row_count = 0;
+    int column_count = 0;
 
     //Pointer to keep track of expanded W and E (acts like an array)
     int* array_board_maker = malloc(*height_p * *width_p * sizeof(int)); 
@@ -129,9 +127,9 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
         int s_number = atoi(&compressed[i+1]); //compressed is a pointer -> check if it works 
 
         if (comp == 'S') {
-            s_count = s_count + s_number;
+            snake_count = snake_count + s_number;
 
-            if (s_count != 1){ //we know it cant be smaller than 1
+            if (snake_count != 1){ //we know it cant be smaller than 1
                 return INIT_ERR_WRONG_SNAKE_NUM;
             }
             else {
