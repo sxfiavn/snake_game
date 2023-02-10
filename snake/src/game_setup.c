@@ -73,9 +73,12 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
                                        size_t* height_p, snake_t* snake_p,
                                        char* board_rep) {
     // TODO: implement!
-    
-    return initialize_default_board(cells_p, width_p, height_p);
-
+    if (board_rep == NULL){
+        return initialize_default_board(cells_p, width_p, height_p)
+    }
+    else {
+        return decompress_board_str(cells_p, width_p, height_p, board_rep);
+    }
 }
 
 /** Takes in a string `compressed` and initializes values pointed to by
@@ -102,7 +105,7 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
         int s_number = atoi(&compressed[i+1]); //pointer to the first number right after the current character. 
 
         if (comp == 'B') {
-            *height_p = s_number/2;
+            *height_p = s_number;
         }
         else if (comp == 'x') {
             *width_p = s_number;
