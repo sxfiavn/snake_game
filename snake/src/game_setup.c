@@ -78,6 +78,11 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
 
 }
 
+int index_return(size_t* row, size_t* column, size_t* total_columns) {
+    return (total_columns * row) + column;
+}
+
+
 /** Takes in a string `compressed` and initializes values pointed to by
  * cells_p, width_p, and height_p accordingly. Arguments:
  *      - cells_p: a pointer to the pointer representing the cells array
@@ -96,73 +101,75 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
                                             char* compressed) {
     // TODO: implement!
 
-
     // Keep Snake Count
     int s_count = 0;
 
-    // Search for substring for number of rows and columns
-    char e_x = strchr(compressed, 'x');  
-    int index_x = (int)(e_x - string); // Index for 'x'
-
-    char e_y = strchr(compressed, '|');
-    int index_y = (int)(e_y - string); // Index for first '|'
-    
-    int row_n = substr(compressed, 0, e_x)
-    int column_n = substr(compressed, 0, e_y)
+    // Row and Column values based on B?x? values.
+    // int *height_p = 0;
+    // int *width_p = 0;
 
     // Variables to use with the loops to keep track of compressed notation
-    // In the end row_n need to match row_count (same for column)
-    int row_count = 0
-    int column_count = 0
+        // In the end row_n need to match row_count (same for column)
+    int row_count = 0;
+    int column_count = 0;
+
+    //Pointer to keep track of expanded W and E (acts like an array)
+    int array_board_maker[sizeof(compressed)]; 
+    *cells_p = array_board_maker;
+    int where_in_array = 0;
+    // I know im using more space than what is necessary, but an array is the best option
 
 
-    for (int i = 0; i < len(compressed); ++i) {
-        if (compressed[i] == 'S') {
-            s_count++;
+
+    for (size_t i = 0; i < (strlen(compressed) - 1); ++i) {
+
+        char comp = compressed[i]; //getting the value at this address
+
+        // &compressed[i+1]
+        int s_number = atoi(&compressed[i+1]); //compressed is a pointer -> check if it works 
+
+        if (comp == 'B') {
+            *height_p = s_number;
         }
-        else if (compressed[i] == '|') {
+        else if (comp == 'x') {
+            *width_p = s_number;
+        }
+        else if (comp == 'S') {
+            s_count = s_count + s_number; 
+        }
+        else if (comp == '|') {
             row_count++;
         }
-        else if ((compressed[i] == 'W') || (compressed[i] == 'E') )
+        else if ((comp == 'W') || (comp == 'E') ) {
+            column_count = column_count + s_number; // same as for 'S'.
+            
+            for (int a = 0; a < s_number; ++a) {
+                array_board_maker[where_in_array] = comp;
+                where_in_array++;
+            }
+        }
+       else if ((comp != '0') || (comp != '1') || (comp != '2') || (comp != '3') || (comp != '4') || (comp != '5') || (comp != '6') || (comp != '7') || (comp != '8') || (comp != '9')) { 
+            return INIT_ERR_BAD_CHAR; // Could also check HEX numbers
+        }
     }
 
-    if (s_count != 1){
-        return INIT_ERR_WRONG_SNAKE_NUM;
+
+    for (size_t i = 0; i < (*height_p - 1); ++i) { // for each row
+
+        for (size_t z = 0; z < (*width_p - 1); ++z) { // go to each column
+            
+            int curr_cell_index = index_return(i, z, *width_p);
+            int curr_cell = array_board_maker[curr_cell_index];
+
+            if (curr_cell == 'W') {
+                curr_cell = FLAG_WALL;
+            }
+            else if (curr_cell == 'E') {
+                curr_cell = FLAG_PLAIN_CELL;
+            }
+        }
+
     }
 
-    if ((row_count != row_n) || (column_count != column_n)) {
-        return INIT_ERR_INCORRECT_DIMENSIONS
-    }
-
-        for (int i = 0; i < 20; ++i) {
-        cells[i] = FLAG_WALL;
-        cells[i + (20 * (10 - 1))] = FLAG_WALL;
-    }
-    // Left and right edges:
-    for (int i = 0; i < 10; ++i) {
-        cells[i * 20] = FLAG_WALL;
-        cells[i * 20 + 20 - 1] = FLAG_WALL;
-    }
-
-    // Add snake
-    cells[20 * 2 + 2] = FLAG_SNAKE;
-
-    //Potential Errors:
-
-        // return INIT_ERR_INCORRECT_DIMENSIONS;
-            //-> If more/less rows than specified in between compressed[0] and the first x is (rows are separated by | character)
-                // Can count how many | characters to count number of rows
-            //-> If more/less columns that specified in between the first x and the first |. 
-                // Count all of the numbers after each | 
-                // TODO: figure out how to count each row (count number after every W and E? )
-        
-        // return INIT_ERR_WRONG_SNAKE_NUM;
-            // If more/less than 1 appearance of the letter S in the whole board
-                
-        //INIT_ERR_BAD_CHAR
-            // If any characters that are not: B, x, 1,2,3,4,5,6,7,8,9,0, W, E, S  appear on the board. 
-
-        // Else: init success. 
-
-    return INIT_UNIMPLEMENTED;
+    return INIT_SUCCESS;
 }
