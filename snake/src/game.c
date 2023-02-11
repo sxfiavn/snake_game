@@ -32,7 +32,7 @@ void update(int* cells, size_t width, size_t height, snake_t* snake_p,
 
     int new_snake_column = g_snake_column + 1;
 
-    while (!((int)width < new_snake_column)) {
+    if (!((int)width < new_snake_column)) {
         if ((cells[width * g_snake_row + new_snake_column] == FLAG_WALL)) {
             g_game_over = 1;
         }
