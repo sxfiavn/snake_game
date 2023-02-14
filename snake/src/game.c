@@ -62,7 +62,7 @@ void update(int* cells, size_t width, size_t height, snake_t* snake_p,
         cells[new_cell] = FLAG_SNAKE;
     }
     else if (cells[new_cell] == FLAG_PLAIN_CELL) {
-        cells[old_cell] == FLAG_PLAIN_CELL;
+        cells[old_cell] = FLAG_PLAIN_CELL;
         cells[new_cell] = FLAG_SNAKE;
     }
     
