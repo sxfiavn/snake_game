@@ -44,10 +44,10 @@ void update(int* cells, size_t width, size_t height, snake_t* snake_p,
         g_snake_column--;
     }
     if (g_direction == INPUT_UP) {
-        g_snake_row++;
+        g_snake_row--;
     }
     if (g_direction == INPUT_DOWN) {
-        g_snake_row--;
+        g_snake_row++;
     }
 
     // New Snake Position
@@ -61,7 +61,7 @@ void update(int* cells, size_t width, size_t height, snake_t* snake_p,
         cells[old_cell] = FLAG_PLAIN_CELL;
         cells[new_cell] = FLAG_SNAKE;
     }
-    else if (cells[new_cell] == FLAG_PLAIN_CELL) {
+    else {
         cells[old_cell] = FLAG_PLAIN_CELL;
         cells[new_cell] = FLAG_SNAKE;
     }
