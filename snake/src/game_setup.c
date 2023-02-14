@@ -74,7 +74,7 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
                                        char* board_rep) {
     // TODO: implement!
     if (board_rep == NULL){
-        place_food(cells, width, height);
+        place_food(cells_p, width_p, height_p);
         return initialize_default_board(cells_p, width_p, height_p);
         
     }
