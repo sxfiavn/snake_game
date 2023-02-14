@@ -60,6 +60,7 @@ void update(int* cells, size_t width, size_t height, snake_t* snake_p,
         g_score++;
         cells[old_cell] = FLAG_PLAIN_CELL;
         cells[new_cell] = FLAG_SNAKE;
+        place_food(cells, width, height);
     }
     else {
         cells[old_cell] = FLAG_PLAIN_CELL;
