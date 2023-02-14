@@ -30,25 +30,42 @@ void update(int* cells, size_t width, size_t height, snake_t* snake_p,
 
     // TODO: implement!
 
-    int new_snake_column = g_snake_column + 1;
+    //Current Snake Position
+    int old_cell = (width * (g_snake_row)) + g_snake_column;
 
-    if (((int)width > new_snake_column)) {
-        if ((cells[width * g_snake_row + g_snake_column] == FLAG_WALL)) {
-            g_game_over = 1;
-        }
-        else {
-        //first update board info, then snake position
-            //update previous bitflag to 0b0001 (plain cell)
-                //update new cell with bitflag 0b0010 (snake)
-            cells[width * g_snake_row + g_snake_column - 1] = FLAG_PLAIN_CELL;
-            cells[width * g_snake_row + g_snake_column] = FLAG_SNAKE;
-            
-            
-            //update snake position
-            g_snake_column = new_snake_column;
-                // g_snake_row stays the same, only moving to the right, not up/down
-        }
+    if (g_direction != INPUT_NONE) {
+        g_direction = input;
     }
+
+    if (g_direction == INPUT_RIGHT) {
+        g_snake_column++;
+    }
+    if (g_direction == INPUT_LEFT) {
+        g_snake_column--;
+    }
+    if (g_direction == INPUT_UP) {
+        g_snake_row++;
+    }
+    if (g_direction == INPUT_DOWN) {
+        g_snake_row--;
+    }
+
+    // New Snake Position
+    int new_cell = (width * (g_snake_row)) + g_snake_column;
+
+    if (cells[new_cell] == FLAG_WALL || cells[new_cell] == FLAG_SNAKE) {
+        g_game_over = 1;
+    }
+    else if (cells[new_cell] == FLAG_FOOD) {
+        g_score++;
+        cells[old_cell] = FLAG_PLAIN_CELL;
+        cells[new_cell] = FLAG_SNAKE;
+    }
+    else if (cells[new_cell] == FLAG_PLAIN_CELL) {
+        cells[old_cell] == FLAG_PLAIN_CELL;
+        cells[new_cell] = FLAG_SNAKE;
+    }
+    
 }
 
 /** Sets a random space on the given board to food.

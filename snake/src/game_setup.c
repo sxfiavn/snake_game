@@ -138,10 +138,11 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
                 return INIT_ERR_WRONG_SNAKE_NUM;
             }
             else {
-                for (int a = 0; a < s_number; ++a) {
                 array_board_maker[where_in_array] = FLAG_SNAKE;
                 where_in_array++;
-                }
+                // g_snake_column = ;
+                // g_snake_row = ;
+                
             }
         }
 
