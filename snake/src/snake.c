@@ -110,6 +110,12 @@ int main(int argc, char** argv) {
     // TODO: Implement (in Part 1C)
     // if ( ? board is not valid ? ) { return EXIT_FAILURE; }
 
+    //check status 
+    if (status != INIT_SUCCESS) {
+        printf("Invalid Board");
+        exit(EXIT_FAILURE);
+    }
+
     // Read in the player's name & save its name and length
     // TODO: Implement (in Part 2B)
     // char name_buffer[1000];
@@ -133,7 +139,7 @@ int main(int argc, char** argv) {
 
 
     while (g_game_over != 1) {
-        usleep(100000);
+        usleep(500000);
         update(cells, width, height, NULL, get_input(), 0);
         render_game(cells, width, height);
     }

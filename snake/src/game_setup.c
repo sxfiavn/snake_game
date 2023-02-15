@@ -108,22 +108,17 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
                                             char* compressed) {
     
 
-    for (size_t i = 0; i < (strlen(compressed) - 1); ++i) {
+    for (size_t i = 0; i < (strlen(compressed) - 1); ++i) { //For the length of the string - 1 (to index correctly)
 
         char comp = compressed[i]; // getting the value at this address
         int s_number = atoi(&compressed[i+1]); //pointer to the first number right after the current character. 
 
         if (comp == 'B') {
-            *height_p = s_number;
+            *height_p = s_number; //get number of rows
         }
         else if (comp == 'x') {
-            *width_p = s_number;
+            *width_p = s_number; // get numbers of columns
         }
-        
-        if (((int)*height_p == 0) || ((int)*width_p == 0)) {
-            return INIT_ERR_INCORRECT_DIMENSIONS;
-        }
-
     }
 
     int snake_count = 0; 
@@ -131,7 +126,7 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
     int column_count = 0;
 
     //Pointer to keep track of expanded W and E (acts like an array)
-    int* array_board_maker = malloc(*height_p * *width_p * sizeof(int)); 
+    int* array_board_maker = malloc(*height_p * *width_p * sizeof(int)); //setting up array
     *cells_p = array_board_maker;
     int where_in_array = 0;
 
@@ -148,10 +143,7 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
             }
             else {
                 array_board_maker[where_in_array] = FLAG_SNAKE;
-                where_in_array++;
-                // g_snake_column = ;
-                // g_snake_row = ;
-                
+                where_in_array++;                
             }
         }
 
