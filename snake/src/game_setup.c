@@ -79,11 +79,9 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
         place_food(*cells_p, *width_p, *height_p);
         return initialize_default_board(cells_p, width_p, height_p); 
     }
-        
-    // }
-    // else {
-    //     return decompress_board_str(cells_p, width_p, height_p, snake_p, board_rep);
-    // }
+    else {
+        return decompress_board_str(cells_p, width_p, height_p, snake_p, board_rep);
+    }
 }
 
 /** Takes in a string `compressed` and initializes values pointed to by
