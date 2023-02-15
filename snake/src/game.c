@@ -31,10 +31,10 @@ void update(int* cells, size_t width, size_t height, snake_t* snake_p,
     // TODO: implement!
 
     //Current Snake Position
-    int old_cell = (width * (g_snake_row)) + g_snake_column;
+    int old_cell = (width * g_snake_row) + g_snake_column;
 
     if (g_direction != INPUT_NONE) {
-        g_direction = input;
+        g_direction = input; //If not, should keep moving to where it was before. 
     }
 
     if (g_direction == INPUT_RIGHT) {
@@ -57,10 +57,10 @@ void update(int* cells, size_t width, size_t height, snake_t* snake_p,
         g_game_over = 1;
     }
     else if (cells[new_cell] == FLAG_FOOD) {
-        g_score++;
+        g_score++; //Ate food, should be more
         cells[old_cell] = FLAG_PLAIN_CELL;
         cells[new_cell] = FLAG_SNAKE;
-        place_food(cells, width, height);
+        place_food(cells, width, height); //Place new food
     }
     else {
         cells[old_cell] = FLAG_PLAIN_CELL;

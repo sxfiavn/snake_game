@@ -75,6 +75,8 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
     // TODO: implement!
     enum board_init_status board = initialize_default_board(cells_p, width_p, height_p);
     place_food(*cells_p, *width_p, *height_p);
+    g_snake_column = 2;
+    g_snake_row = 2;
     return board;
     
     // if (board_rep == NULL){
