@@ -112,8 +112,17 @@ int main(int argc, char** argv) {
 
     //check status 
     if (status != INIT_SUCCESS) {
-        printf("Invalid Board");
-        exit(EXIT_FAILURE);
+        if (status == INIT_ERR_INCORRECT_DIMENSIONS) {
+            printf("Incorrect Dimensions");
+        }
+        if (status == INIT_ERR_BAD_CHAR) {
+            printf("Bad Character");
+        }
+        if (status == INIT_ERR_WRONG_SNAKE_NUM) {
+            
+        }
+        printf("Exiting Game");
+        return EXIT_FAILURE;
     }
 
     // Read in the player's name & save its name and length

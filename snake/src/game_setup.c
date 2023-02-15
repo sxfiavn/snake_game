@@ -87,6 +87,10 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
         board = decompress_board_str(cells_p, width_p, height_p, snake_p, board_rep);
     }
 
+    if (board != INIT_SUCCESS) {
+        free(*cells_p);
+    }
+
     return board;
 }
 
@@ -139,6 +143,8 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
             snake_count = snake_count + s_number;
 
             if (snake_count != 1){ //we know it cant be smaller than 1
+                //free(*cells_p);
+                printf("snake_count != 1");
                 return INIT_ERR_WRONG_SNAKE_NUM;
             }
             else {
@@ -151,6 +157,7 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
             column_count = column_count + s_number; // same as for 'S'.
             
             if (column_count > (int)*width_p) {
+                //free(*cells_p);
                 return INIT_ERR_INCORRECT_DIMENSIONS;   // not handling if its smaller than column_n
             }
             else {
@@ -165,6 +172,7 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
             column_count = column_count + s_number; // same as for 'S'.
             
             if (column_count > (int)*width_p) {
+                //free(*cells_p);
                 return INIT_ERR_INCORRECT_DIMENSIONS;   // not handling if its smaller than column_n
             }
             else {
@@ -179,17 +187,20 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
             row_count++;
 
             if (row_count > (int)*height_p) {
+                //free(*cells_p);
                 return INIT_ERR_INCORRECT_DIMENSIONS;
             }
         }
 
         else if (((comp < DIGIT_START) || (comp < DIGIT_END))) { 
+            //free(*cells_p);
             return INIT_ERR_BAD_CHAR; 
         }
         
     }
 
-    if ((column_count < (int)*width_p) || (row_count < (int)*height_p)) {
+    if ((column_count > (int)*width_p) || (row_count > (int)*height_p)) {
+        //free(*cells_p);
         return INIT_ERR_INCORRECT_DIMENSIONS;
     }
 
