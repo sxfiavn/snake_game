@@ -72,20 +72,22 @@ enum board_init_status initialize_default_board(int** cells_p, size_t* width_p,
 enum board_init_status initialize_game(int** cells_p, size_t* width_p,
                                        size_t* height_p, snake_t* snake_p,
                                        char* board_rep) {
+
     // TODO: implement!
-    enum board_init_status board = initialize_default_board(cells_p, width_p, height_p);
-    place_food(*cells_p, *width_p, *height_p);
-    g_snake_column = 2;
-    g_snake_row = 2;
-    return board;
+    enum board_init_status board;
+    if (board_rep == NULL){
+        board = initialize_default_board(cells_p, width_p, height_p);
+        place_food(*cells_p, *width_p, *height_p);
+        g_snake_column = 2;
+        g_snake_row = 2;
+        g_direction = INPUT_RIGHT; 
     
-    // if (board_rep == NULL){
-    //     place_food(*cells_p, *width_p, *height_p);
-    //     return initialize_default_board(cells_p, width_p, height_p); 
-    // }
-    // else {
-    //     return decompress_board_str(cells_p, width_p, height_p, snake_p, board_rep);
-    // }
+    }
+    else {
+        board = decompress_board_str(cells_p, width_p, height_p, snake_p, board_rep);
+    }
+
+    return board;
 }
 
 /** Takes in a string `compressed` and initializes values pointed to by

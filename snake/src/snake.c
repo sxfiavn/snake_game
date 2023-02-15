@@ -43,7 +43,6 @@ void end_game(int* cells, size_t width, size_t height, snake_t* snake_p) {
 
     // Free any memory we've taken
     teardown(cells, snake_p); // perform cleanup after each test method in a test case ends.
-    free(cells);
 
     // ****************** UNCOMMENT THIS CODE IN PART 2B ***********************
     /*
@@ -120,29 +119,22 @@ int main(int argc, char** argv) {
 
     // TODO: Remove this message, uncomment the code below this message
     //       and implement Part 1A here.
-    printf(
-        "             ____   \n"
-        "Hello       / . .\\ \n"
-        "CS 300      \\  ---<\n"
-        "student!     \\  /  \n"
-        "   __________/ /    \n"
-        "-=:___________/\n");
+    // printf(
+    //     "             ____   \n"
+    //     "Hello       / . .\\ \n"
+    //     "CS 300      \\  ---<\n"
+    //     "student!     \\  /  \n"
+    //     "   __________/ /    \n"
+    //     "-=:___________/\n");
 
     initialize_window(width, height);
     
     // TODO: implement the game loop here (Part 1A)!
 
-    enum input_key direc;
 
-    while (g_game_over == 0) {
+    while (g_game_over != 1) {
         usleep(100000);
-
-        direc = get_input();
-
-        if (direc == g_direction) {
-            direc = INPUT_NONE;
-        }
-        update(cells, width, height, NULL, direc, 0);
+        update(cells, width, height, NULL, get_input(), 0);
         render_game(cells, width, height);
     }
     end_game(cells, width, height, &snake);

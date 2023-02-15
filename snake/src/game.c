@@ -30,11 +30,17 @@ void update(int* cells, size_t width, size_t height, snake_t* snake_p,
 
     // TODO: implement!
 
+    // if (input == g_direction) {
+    //         input = INPUT_NONE;
+    //     }
     //Current Snake Position
     int old_cell = (width * g_snake_row) + g_snake_column;
 
-    if (g_direction != INPUT_NONE) {
-        g_direction = input; //If not, should keep moving to where it was before. 
+    if (input == INPUT_NONE) {
+        input = g_direction; //If not, should keep moving to where it was before. 
+    }
+    else {
+        g_direction = input;
     }
 
     if (g_direction == INPUT_RIGHT) {
@@ -105,5 +111,5 @@ void read_name(char* write_into) {
  *  - snake_p: a pointer to your snake struct. (not needed until part 2)
  */
 void teardown(int* cells, snake_t* snake_p) {
-    // TODO: implement!
+    free(cells);
 }
