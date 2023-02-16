@@ -87,9 +87,9 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
         board = decompress_board_str(cells_p, width_p, height_p, snake_p, board_rep);
     }
 
-    if (board != INIT_SUCCESS) {
-        free(*cells_p);
-    }
+    // if (board != INIT_SUCCESS) {
+    //     free(*cells_p);
+    // }
 
     return board;
 }
@@ -99,7 +99,7 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
  *      - cells_p: a pointer to the pointer representing the cells array
  *                 that we would like to initialize.
  *      - width_p: a pointer to the width variable we'd like to initialize.
- *      - height_p: a pointer to the height variable we'd like to initialize.
+ *      - height_p: a ointer to the height variable we'd like to initialize.
  *      - snake_p: a pointer to your snake struct (not used until part 2!)
  *      - compressed: a string that contains the representation of the board.
  * Note: We assume that the string will be of the following form:
@@ -130,8 +130,8 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
     int column_count = 0;
 
     //Pointer to keep track of expanded W and E (acts like an array)
-    int* array_board_maker = malloc(*height_p * *width_p * sizeof(int)); //setting up array
-    *cells_p = array_board_maker;
+    *cells_p = malloc(*height_p * *width_p * sizeof(int)); //setting up array
+    
     int where_in_array = 0;
 
     for (size_t i = 0; i < (strlen(compressed) - 1); ++i) {
@@ -148,7 +148,7 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
                 return INIT_ERR_WRONG_SNAKE_NUM;
             }
             else {
-                array_board_maker[where_in_array] = FLAG_SNAKE;
+                *cells_p[where_in_array] = FLAG_SNAKE;
                 where_in_array++;                
             }
         }
@@ -162,7 +162,7 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
             }
             else {
                 for (int a = 0; a < s_number; ++a) {
-                    array_board_maker[where_in_array] = FLAG_WALL;
+                    *cells_p[where_in_array] = FLAG_WALL;
                     where_in_array++;
                 }
             }
@@ -177,7 +177,7 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
             }
             else {
                 for (int a = 0; a < s_number; ++a) {
-                    array_board_maker[where_in_array] = FLAG_PLAIN_CELL;
+                    *cells_p[where_in_array] = FLAG_PLAIN_CELL;
                     where_in_array++;
                 }
             }

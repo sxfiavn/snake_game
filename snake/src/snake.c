@@ -119,7 +119,7 @@ int main(int argc, char** argv) {
             printf("Bad Character");
         }
         if (status == INIT_ERR_WRONG_SNAKE_NUM) {
-            
+            printf("Incorrect snake num");
         }
         printf("Exiting Game");
         return EXIT_FAILURE;
