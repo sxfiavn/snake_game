@@ -87,9 +87,9 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
         board = decompress_board_str(cells_p, width_p, height_p, snake_p, board_rep);
     }
 
-    // if (board != INIT_SUCCESS) {
-    //     free(*cells_p);
-    // }
+    if (board != INIT_SUCCESS) {
+        free(*cells_p);
+    }
 
     return board;
 }
@@ -111,6 +111,7 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
                                             size_t* height_p, snake_t* snake_p,
                                             char* compressed) {
     
+    int x_index = 0;
 
     for (size_t i = 0; i < (strlen(compressed) - 1); ++i) { //For the length of the string - 1 (to index correctly)
 
@@ -121,6 +122,7 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
             *height_p = s_number; //get number of rows
         }
         else if (comp == 'x') {
+            x_index = i;
             *width_p = s_number; // get numbers of columns
         }
     }
@@ -134,10 +136,10 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
     
     int where_in_array = 0;
 
-    for (size_t i = 0; i < (strlen(compressed) - 1); ++i) {
+    for (size_t z = x_index + 1; z < (strlen(compressed) - 1 - x_index); ++z) {
 
-        char comp = compressed[i]; //getting the value at this address
-        int s_number = atoi(&compressed[i+1]); //compressed is a pointer -> check if it works 
+        char comp = compressed[z]; //getting the value at this address
+        int s_number = atoi(&compressed[z+1]); //compressed is a pointer -> check if it works 
 
         if (comp == 'S') {
             snake_count = snake_count + s_number;
@@ -192,7 +194,7 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
             }
         }
 
-        else if (((comp < DIGIT_START) || (comp < DIGIT_END))) { 
+        else if (((comp < DIGIT_START) || (comp > DIGIT_END))) { 
             //free(*cells_p);
             return INIT_ERR_BAD_CHAR; 
         }
