@@ -148,8 +148,6 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
             snake_count = snake_count + s_number;
 
             if (snake_count != 1){ //we know it cant be smaller than 1
-                //free(*cells_p);
-                printf("snake_count != 1");
                 return INIT_ERR_WRONG_SNAKE_NUM;
             }
             else {
@@ -214,6 +212,9 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
     if ((column_count != (int)*width_p) || (row_count != (int)*height_p)) {
         //free(*cells_p);
         return INIT_ERR_INCORRECT_DIMENSIONS;
+    }
+    if (snake_count != 1){ //we know it cant be smaller than 1
+        return INIT_ERR_WRONG_SNAKE_NUM;
     }
 
     return INIT_SUCCESS;
