@@ -88,6 +88,7 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
         g_game_over = 0;
         g_score = 0;
         board = decompress_board_str(cells_p, width_p, height_p, snake_p, board_rep);
+        place_food(*cells_p, *width_p, *height_p);
     }
 
     return board;
@@ -167,7 +168,7 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
             }
             else {
                 for (int a = where_in_array; a < (s_number + where_in_array); ++a) {
-                    cells[a] = FLAG_PLAIN_CELL;
+                    cells[a] = FLAG_WALL;
                 }
                 where_in_array = s_number + where_in_array;
             }

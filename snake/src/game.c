@@ -30,49 +30,50 @@ void update(int* cells, size_t width, size_t height, snake_t* snake_p,
 
     // TODO: implement!
 
-    // if (input == g_direction) {
-    //         input = INPUT_NONE;
-    //     }
+    if (g_game_over != 1) {
     //Current Snake Position
-    int old_cell = (width * g_snake_row) + g_snake_column;
+        int old_cell = (width * g_snake_row) + g_snake_column;
 
-    if (input == INPUT_NONE) {
-        input = g_direction; //If not, should keep moving to where it was before. 
+        if (input == INPUT_NONE) {
+            input = g_direction; //If not, should keep moving to where it was before. 
+        }
+        else {
+            g_direction = input;
+        }
+
+        if (g_direction == INPUT_RIGHT) {
+            g_snake_column++;
+        }
+        if (g_direction == INPUT_LEFT) {
+            g_snake_column--;
+        }
+        if (g_direction == INPUT_UP) {
+            g_snake_row--;
+        }
+        if (g_direction == INPUT_DOWN) {
+            g_snake_row++;
+        }
+
+        // New Snake Position
+        int new_cell = (width * (g_snake_row)) + g_snake_column;
+
+        if (cells[new_cell] == FLAG_WALL || cells[new_cell] == FLAG_SNAKE) {
+            g_game_over = 1;
+        }
+        else if (cells[new_cell] == FLAG_FOOD) {
+            g_score++; //Ate food, should be more
+            cells[old_cell] = FLAG_PLAIN_CELL;
+            cells[new_cell] = FLAG_SNAKE;
+            place_food(cells, width, height); //Place new food
+        }
+        else {
+            cells[old_cell] = FLAG_PLAIN_CELL;
+            cells[new_cell] = FLAG_SNAKE;
+        }
     }
     else {
-        g_direction = input;
+        return;
     }
-
-    if (g_direction == INPUT_RIGHT) {
-        g_snake_column++;
-    }
-    if (g_direction == INPUT_LEFT) {
-        g_snake_column--;
-    }
-    if (g_direction == INPUT_UP) {
-        g_snake_row--;
-    }
-    if (g_direction == INPUT_DOWN) {
-        g_snake_row++;
-    }
-
-    // New Snake Position
-    int new_cell = (width * (g_snake_row)) + g_snake_column;
-
-    if (cells[new_cell] == FLAG_WALL || cells[new_cell] == FLAG_SNAKE) {
-        g_game_over = 1;
-    }
-    else if (cells[new_cell] == FLAG_FOOD) {
-        g_score++; //Ate food, should be more
-        cells[old_cell] = FLAG_PLAIN_CELL;
-        cells[new_cell] = FLAG_SNAKE;
-        place_food(cells, width, height); //Place new food
-    }
-    else {
-        cells[old_cell] = FLAG_PLAIN_CELL;
-        cells[new_cell] = FLAG_SNAKE;
-    }
-    
 }
 
 /** Sets a random space on the given board to food.
