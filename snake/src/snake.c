@@ -113,15 +113,15 @@ int main(int argc, char** argv) {
     //check status 
     if (status != INIT_SUCCESS) {
         if (status == INIT_ERR_INCORRECT_DIMENSIONS) {
-            printf("Incorrect Dimensions,");
+            printf("Incorrect Dimensions, ");
         }
         if (status == INIT_ERR_BAD_CHAR) {
-            printf("Bad Character,");
+            printf("Bad Character, ");
         }
         if (status == INIT_ERR_WRONG_SNAKE_NUM) {
-            printf("Incorrect Snake Number");
+            printf("Incorrect Snake Number, ");
         }
-        printf("Exiting Game,");
+        printf("Exiting Game");
         free(cells);
         return EXIT_FAILURE;
     }

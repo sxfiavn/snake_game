@@ -112,13 +112,13 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
     for (size_t i = 0; i < strlen(compressed); ++i) { //For the length of the string - 1 (to index correctly)
 
         char comp = compressed[i];
-        printf("%d/n", compressed[i]); // getting the value at this address
+        //printf("%d/n", compressed[i]); // getting the value at this address
         int s_number = atoi(&compressed[i+1]); //pointer to the first number right after the current character. 
 
         if (comp == 'B') {
-            printf("%p/n", (void*)*height_p);
+            //printf("%p/n", (void*)*height_p);
             *height_p = s_number; //get number of rows
-            printf("%p/n", (void*)*height_p);
+            //printf("%p/n", (void*)*height_p);
         }
         else if (comp == 'x') {
             x_index = i;
@@ -133,7 +133,7 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
 
     //Pointer to keep track of expanded W and E (acts like an array)
     int* cells = malloc(*height_p * *width_p * sizeof(int)); //setting up array
-    printf("%p/n", *cells_p);
+    //printf("%p/n", *cells_p);
     *cells_p = cells;
 
     int where_in_array = 0;
@@ -141,7 +141,7 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
     for (size_t z = x_index + 1; z < (strlen(compressed) - x_index); ++z) {
 
         char comp = compressed[z]; //getting the value at this address
-        printf("%d/n", compressed[z]);
+        //printf("%d/n", compressed[z]);
         int s_number = atoi(&compressed[z+1]); //compressed is a pointer -> check if it works 
 
         if (comp == 'S') {
@@ -157,10 +157,10 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
         }
 
         else if (comp == 'W') {
-            printf("%d\n",column_count);
+            //printf("%d\n",column_count);
             column_count = column_count + s_number; // same as for 'S'.
-            printf("%d\n",s_number);
-            printf("%d\n",column_count);
+            //printf("%d\n",s_number);
+            //printf("%d\n",column_count);
 
             if (column_count > (int)*width_p) {
                 //free(*cells_p);
@@ -168,10 +168,10 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
             }
             else {
                 for (int a = where_in_array; a < (s_number + where_in_array); ++a) {
-                    printf("%d\n", s_number + where_in_array);
+                    //printf("%d\n", s_number + where_in_array);
                     cells[a] = FLAG_PLAIN_CELL;
-                    printf("%d\n", cells[a]);
-                    printf("%d\n", where_in_array);
+                    //printf("%d\n", cells[a]);
+                    //printf("%d\n", where_in_array);
                 }
                 where_in_array = s_number + where_in_array;
             }
