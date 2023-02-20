@@ -76,14 +76,17 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
     // TODO: implement!
     enum board_init_status board;
     if (board_rep == NULL){
-        board = initialize_default_board(cells_p, width_p, height_p);
-        place_food(*cells_p, *width_p, *height_p);
         g_snake_column = 2;
         g_snake_row = 2;
         g_direction = INPUT_RIGHT; 
-    
+        g_game_over = 0;
+        g_score = 0;
+        board = initialize_default_board(cells_p, width_p, height_p);
+        place_food(*cells_p, *width_p, *height_p);
     }
     else {
+        g_game_over = 0;
+        g_score = 0;
         board = decompress_board_str(cells_p, width_p, height_p, snake_p, board_rep);
     }
 
@@ -138,7 +141,7 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
 
     int where_in_array = 0;
 
-    for (size_t z = x_index + 1; z < (strlen(compressed) - x_index); ++z) {
+    for (size_t z = x_index + 1; z < (strlen(compressed) - x_index + 1); ++z) {
 
         char comp = compressed[z]; //getting the value at this address
         //printf("%d/n", compressed[z]);
@@ -152,26 +155,19 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
             }
             else {
                 cells[where_in_array] = FLAG_SNAKE;
-                where_in_array++;                
+                where_in_array = s_number + where_in_array;              
             }
         }
 
         else if (comp == 'W') {
-            //printf("%d\n",column_count);
             column_count = column_count + s_number; // same as for 'S'.
-            //printf("%d\n",s_number);
-            //printf("%d\n",column_count);
 
             if (column_count > (int)*width_p) {
-                //free(*cells_p);
                 return INIT_ERR_INCORRECT_DIMENSIONS;   // not handling if its smaller than column_n
             }
             else {
                 for (int a = where_in_array; a < (s_number + where_in_array); ++a) {
-                    //printf("%d\n", s_number + where_in_array);
                     cells[a] = FLAG_PLAIN_CELL;
-                    //printf("%d\n", cells[a]);
-                    //printf("%d\n", where_in_array);
                 }
                 where_in_array = s_number + where_in_array;
             }
@@ -181,7 +177,6 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
             column_count = column_count + s_number; 
             
             if (column_count > (int)*width_p) {
-                //free(*cells_p);
                 return INIT_ERR_INCORRECT_DIMENSIONS;   // not handling if its smaller than column_n
             }
             else {
@@ -206,14 +201,16 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
             //free(*cells_p);
             return INIT_ERR_BAD_CHAR; 
         }
-        
     }
 
     if ((column_count != (int)*width_p) || (row_count != (int)*height_p)) {
+        //printf("%d\n", "*column_count");
+        //printf("%d\n", "*row_count");
+        //printf("%d\n", "(int)*width_p");
         //free(*cells_p);
         return INIT_ERR_INCORRECT_DIMENSIONS;
     }
-    if (snake_count != 1){ //we know it cant be smaller than 1
+    if (snake_count != 1){ //we know it cant be anything other than 1
         return INIT_ERR_WRONG_SNAKE_NUM;
     }
 

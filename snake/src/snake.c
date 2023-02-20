@@ -149,7 +149,7 @@ int main(int argc, char** argv) {
 
 
     while (g_game_over != 1) {
-        usleep(500000);
+        usleep(300000);
         update(cells, width, height, NULL, get_input(), 0);
         render_game(cells, width, height);
     }
