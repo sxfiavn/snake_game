@@ -87,6 +87,9 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
     else {
         g_game_over = 0;
         g_score = 0;
+        g_snake_column = 2;
+        g_snake_row = 2;
+        g_direction = INPUT_RIGHT;
         board = decompress_board_str(cells_p, width_p, height_p, snake_p, board_rep);
         place_food(*cells_p, *width_p, *height_p);
     }
@@ -155,7 +158,10 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
                 return INIT_ERR_WRONG_SNAKE_NUM;
             }
             else {
-                cells[where_in_array] = FLAG_SNAKE;
+                g_snake_column = column_count;
+                g_snake_row = row_count;
+                cells[where_in_array] = FLAG_PLAIN_CELL;
+                cells[column_count + (row_count * (int)*width_p)] = FLAG_SNAKE;
                 where_in_array = s_number + where_in_array;              
             }
         }
