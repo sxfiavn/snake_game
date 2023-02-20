@@ -59,6 +59,7 @@ void update(int* cells, size_t width, size_t height, snake_t* snake_p,
 
         if (cells[new_cell] == FLAG_WALL || cells[new_cell] == FLAG_SNAKE) {
             g_game_over = 1;
+            return;
         }
         else if (cells[new_cell] == FLAG_FOOD) {
             g_score++; //Ate food, should be more
