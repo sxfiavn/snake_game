@@ -42,7 +42,7 @@ void end_game(int* cells, size_t width, size_t height, snake_t* snake_p) {
     // Game over!
 
     // Free any memory we've taken
-    //teardown(cells, snake_p); // perform cleanup after each test method in a test case ends.
+    teardown(cells, snake_p); // perform cleanup after each test method in a test case ends.
 
     // ****************** UNCOMMENT THIS CODE IN PART 2B ***********************
     /*
@@ -119,9 +119,10 @@ int main(int argc, char** argv) {
             printf("Bad Character,");
         }
         if (status == INIT_ERR_WRONG_SNAKE_NUM) {
-            printf("Incorrect snake num,");
+            printf("Incorrect Snake Number");
         }
         printf("Exiting Game,");
+        free(cells);
         return EXIT_FAILURE;
     }
 

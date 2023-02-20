@@ -87,10 +87,6 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
         board = decompress_board_str(cells_p, width_p, height_p, snake_p, board_rep);
     }
 
-    if (board != INIT_SUCCESS) {
-        free(*cells_p);
-    }
-
     return board;
 }
 
@@ -99,7 +95,7 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
  *      - cells_p: a pointer to the pointer representing the cells array
  *                 that we would like to initialize.
  *      - width_p: a pointer to the width variable we'd like to initialize.
- *      - height_p: a ointer to the height variable we'd like to initialize.
+ *      - height_p: a pointer to the height variable we'd like to initialize.
  *      - snake_p: a pointer to your snake struct (not used until part 2!)
  *      - compressed: a string that contains the representation of the board.
  * Note: We assume that the string will be of the following form:
@@ -111,15 +107,18 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
                                             size_t* height_p, snake_t* snake_p,
                                             char* compressed) {
     
-    int x_index = 0;
+    size_t x_index = 0;
 
-    for (size_t i = 0; i < (strlen(compressed) - 1); ++i) { //For the length of the string - 1 (to index correctly)
+    for (size_t i = 0; i < strlen(compressed); ++i) { //For the length of the string - 1 (to index correctly)
 
-        char comp = compressed[i]; // getting the value at this address
+        char comp = compressed[i];
+        printf("%d/n", compressed[i]); // getting the value at this address
         int s_number = atoi(&compressed[i+1]); //pointer to the first number right after the current character. 
 
         if (comp == 'B') {
+            printf("%p/n", (void*)*height_p);
             *height_p = s_number; //get number of rows
+            printf("%p/n", (void*)*height_p);
         }
         else if (comp == 'x') {
             x_index = i;
@@ -131,14 +130,18 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
     int row_count = 0;
     int column_count = 0;
 
+
     //Pointer to keep track of expanded W and E (acts like an array)
-    *cells_p = malloc(*height_p * *width_p * sizeof(int)); //setting up array
-    
+    int* cells = malloc(*height_p * *width_p * sizeof(int)); //setting up array
+    printf("%p/n", *cells_p);
+    *cells_p = cells;
+
     int where_in_array = 0;
 
-    for (size_t z = x_index + 1; z < (strlen(compressed) - 1 - x_index); ++z) {
+    for (size_t z = x_index + 1; z < (strlen(compressed) - x_index); ++z) {
 
         char comp = compressed[z]; //getting the value at this address
+        printf("%d/n", compressed[z]);
         int s_number = atoi(&compressed[z+1]); //compressed is a pointer -> check if it works 
 
         if (comp == 'S') {
@@ -150,43 +153,50 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
                 return INIT_ERR_WRONG_SNAKE_NUM;
             }
             else {
-                *cells_p[where_in_array] = FLAG_SNAKE;
+                cells[where_in_array] = FLAG_SNAKE;
                 where_in_array++;                
             }
         }
 
         else if (comp == 'W') {
+            printf("%d\n",column_count);
             column_count = column_count + s_number; // same as for 'S'.
-            
+            printf("%d\n",s_number);
+            printf("%d\n",column_count);
+
             if (column_count > (int)*width_p) {
                 //free(*cells_p);
                 return INIT_ERR_INCORRECT_DIMENSIONS;   // not handling if its smaller than column_n
             }
             else {
-                for (int a = 0; a < s_number; ++a) {
-                    *cells_p[where_in_array] = FLAG_WALL;
-                    where_in_array++;
+                for (int a = where_in_array; a < (s_number + where_in_array); ++a) {
+                    printf("%d\n", s_number + where_in_array);
+                    cells[a] = FLAG_PLAIN_CELL;
+                    printf("%d\n", cells[a]);
+                    printf("%d\n", where_in_array);
                 }
+                where_in_array = s_number + where_in_array;
             }
         }
 
-        else if (comp == 'E') {
-            column_count = column_count + s_number; // same as for 'S'.
+        else if (comp == 'E') { //given the number after the E
+            column_count = column_count + s_number; 
             
             if (column_count > (int)*width_p) {
                 //free(*cells_p);
                 return INIT_ERR_INCORRECT_DIMENSIONS;   // not handling if its smaller than column_n
             }
             else {
-                for (int a = 0; a < s_number; ++a) {
-                    *cells_p[where_in_array] = FLAG_PLAIN_CELL;
-                    where_in_array++;
+                for (int a = where_in_array; a < (s_number + where_in_array); ++a) {
+                    cells[a] = FLAG_PLAIN_CELL;
                 }
+                where_in_array = s_number + where_in_array;
             }
         }
 
         else if (comp == '|') {
             row_count++;
+            column_count = 0;
 
             if (row_count > (int)*height_p) {
                 //free(*cells_p);
