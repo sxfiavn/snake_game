@@ -211,7 +211,7 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
         
     }
 
-    if ((column_count > (int)*width_p) || (row_count > (int)*height_p)) {
+    if ((column_count != (int)*width_p) || (row_count != (int)*height_p)) {
         //free(*cells_p);
         return INIT_ERR_INCORRECT_DIMENSIONS;
     }
