@@ -29,44 +29,249 @@ void update(int* cells, size_t width, size_t height, snake_t* snake_p,
     // walls, so it does not handle the case where a snake runs off the board.
 
     // TODO: implement!
+    enum input_key current_direction = INPUT_RIGHT;
 
     if (g_game_over != 1) {
-    //Current Snake Position
-        int old_cell = (width * g_snake_row) + g_snake_column;
+
+        //Current Snake Position - Global
+        int curr_snake_coord_first = *((int*)get_first(snake_p->snake_coordinates));   
+        int curr_snake_coord_last = *((int*)get_last(snake_p->snake_coordinates)); 
+
+        
+        // Dealing with extra cases
+
+        //Ways the game is over
+        if ((cells[curr_snake_coord_first + width] == FLAG_WALL) && (current_direction == INPUT_DOWN) && (input == INPUT_DOWN)) {
+            g_game_over = 1;
+        }
+        if ((cells[curr_snake_coord_first - width] == FLAG_WALL) && (current_direction == INPUT_UP) && (input == INPUT_UP)) {
+            g_game_over = 1; 
+        }
+
+        if ((cells[curr_snake_coord_first + 1] == FLAG_WALL) && (current_direction == INPUT_RIGHT) && (input == INPUT_RIGHT)) {
+            g_game_over = 1;
+        }
+        if ((cells[curr_snake_coord_first - 1] == FLAG_WALL) && (current_direction == INPUT_LEFT) && (input == INPUT_LEFT)) {
+            g_game_over = 1;
+        } 
+
+        //If the snake is growing and its size (has more than 1 coordinate) is bigger than 1:
+        // Make sure that the snake cant turn around and 'overlap' with the rest of the body
+        // As per instructions: In the actual snake game, if the snake is length 2 or longer and immediately tries to go back the way it came (backing into itself), the movement 
+        // is not accepted and the snake continues to move in its previous direction.
+        if ((growing == 1) && (length_list(snake_p->snake_coordinates) > 1)) {
+            if((current_direction == INPUT_UP) && input == INPUT_DOWN){
+                input = INPUT_UP;
+            }
+            if((current_direction == INPUT_DOWN) && input == INPUT_UP){
+                input = INPUT_DOWN;
+            }
+            if((current_direction == INPUT_LEFT) && input == INPUT_RIGHT){
+                input = INPUT_LEFT;
+            }
+            if((current_direction == INPUT_RIGHT) && input == INPUT_LEFT) { 
+                input = INPUT_RIGHT;
+            }
+        }
+
+        
 
         if (input == INPUT_NONE) {
-            input = g_direction; //If not, should keep moving to where it was before. 
-        }
-        else {
-            g_direction = input;
+            input = *((int*)get_first(snake_p->snake_direction)); //If not, should keep moving to where it was before. 
+            //TODO: IMPLEMENT
         }
 
-        if (g_direction == INPUT_RIGHT) {
-            g_snake_column++;
+    //When input from user is downwards key
+    if (input == INPUT_DOWN){
+
+        if((cells[curr_snake_coord_first + (int)width] == FLAG_SNAKE) 
+        && (curr_snake_coord_last != (curr_snake_coord_first + (int)width))){
+            g_game_over = 1;
+        } 
+        
+        else {
+            current_direction = INPUT_UP;
+            snake_p->snake_direction = current_direction;
+
+            int curr_snake_coord_first_local = *((int*)get_first(snake_p->snake_coordinates)); 
+
+            if(cells[curr_snake_coord_first - width] == FLAG_FOOD){
+        
+                    if (growing == 1) {
+                        g_score++; // Eating increases score
+                        curr_snake_coord_first_local = curr_snake_coord_first_local + width; 
+                        cells[curr_snake_coord_first_local] = FLAG_SNAKE;
+                        insert_first(&(snake_p->snake_coordinates), &curr_snake_coord_first_local, sizeof(int));
+                        place_food(cells, width, height); // Replaces food
+                    }
+
+                    else if (growing == 0) { 
+                        g_score++; // Eating increases score
+                        place_food(cells, width, height); // Replaces food
+                    }
+            }
+
+            else { 
+                curr_snake_coord_first_local = curr_snake_coord_first_local + width; //still decreasing the position pointer
+                cells[curr_snake_coord_last] = FLAG_PLAIN_CELL; //if its not food, the snake will move one to the left
+                cells[curr_snake_coord_first_local] = FLAG_SNAKE; //the -1 position is a snake
+                insert_first(&(snake_p->snake_coordinates), &curr_snake_coord_first_local, sizeof(int));
+
+                void* to_remove = remove_last(&(snake_p->snake_coordinates));
+                free(to_remove);
+            }
         }
-        if (g_direction == INPUT_LEFT) {
-            g_snake_column--;
+    }
+
+    //Case when user is clicking the upwards arrow button
+    if (input == INPUT_UP){
+
+        if((cells[curr_snake_coord_first - (int)width] == FLAG_SNAKE) 
+        && (curr_snake_coord_last != (curr_snake_coord_first - (int)width))){
+            g_game_over = 1;
+        } 
+        
+        else {
+            current_direction = INPUT_UP;
+            snake_p->snake_direction = current_direction;
+
+            int curr_snake_coord_first_local = *((int*)get_first(snake_p->snake_coordinates)); 
+
+            if(cells[curr_snake_coord_first - width] == FLAG_FOOD){
+        
+                    if (growing == 1) {
+                        g_score++; // Eating increases score
+                        curr_snake_coord_first_local = curr_snake_coord_first_local - width; 
+                        cells[curr_snake_coord_first_local] = FLAG_SNAKE;
+                        insert_first(&(snake_p->snake_coordinates), &curr_snake_coord_first_local, sizeof(int));
+                        place_food(cells, width, height); // Replaces food
+                    }
+
+                    else if (growing == 0) { 
+                        g_score++; // Eating increases score
+                        place_food(cells, width, height); // Replaces food
+                    }
+            }
+
+            else { 
+                curr_snake_coord_first_local = curr_snake_coord_first_local - width; //still decreasing the position pointer
+                cells[curr_snake_coord_last] = FLAG_PLAIN_CELL; //if its not food, the snake will move one to the left
+                cells[curr_snake_coord_first_local] = FLAG_SNAKE; //the -1 position is a snake
+                insert_first(&(snake_p->snake_coordinates), &curr_snake_coord_first_local, sizeof(int));
+
+                void* to_remove = remove_last(&(snake_p->snake_coordinates));
+                free(to_remove);
+            }
         }
-        if (g_direction == INPUT_UP) {
-            g_snake_row--;
+    }
+        
+
+
+    //Case when user is clicking the right button
+    if (input == INPUT_RIGHT){
+
+        if((cells[curr_snake_coord_first + 1] == FLAG_SNAKE) 
+        && (curr_snake_coord_last != (curr_snake_coord_first + 1))){
+            g_game_over = 1;
+        } 
+        
+        else {
+            current_direction = INPUT_RIGHT;
+            snake_p->snake_direction = current_direction;
+
+            int curr_snake_coord_first_local = *((int*)get_first(snake_p->snake_coordinates)); 
+
+            if(cells[curr_snake_coord_first + 1] == FLAG_FOOD){
+        
+                    if (growing == 1) {
+                        g_score++; // Eating increases score
+                        curr_snake_coord_first_local++; 
+                        cells[curr_snake_coord_first_local] = FLAG_SNAKE;
+                        insert_first(&(snake_p->snake_coordinates), &curr_snake_coord_first_local, sizeof(int));
+                        place_food(cells, width, height); // Replaces food
+                    }
+
+                    else if (growing == 0) { 
+                        g_score++; // Eating increases score
+                        place_food(cells, width, height); // Replaces food
+                    }
+            }
+
+            else { 
+                curr_snake_coord_first_local++; //still decreasing the position pointer
+                cells[curr_snake_coord_last] = FLAG_PLAIN_CELL; //if its not food, the snake will move one to the left
+                cells[curr_snake_coord_first_local] = FLAG_SNAKE; //the -1 position is a snake
+                insert_first(&(snake_p->snake_coordinates), &curr_snake_coord_first_local, sizeof(int));
+
+                void* to_remove = remove_last(&(snake_p->snake_coordinates));
+                free(to_remove);
+            }
         }
-        if (g_direction == INPUT_DOWN) {
-            g_snake_row++;
+    }
+
+
+     //Case when the user is clicking the left arrow
+        if(input == INPUT_LEFT){
+
+            //Check if the head is a snake and if the last and first position have the same coordinates (they touch), game over. 
+            if((cells[curr_snake_coord_first - 1] == FLAG_SNAKE) && (curr_snake_coord_last != (curr_snake_coord_first - 1))){
+                g_game_over = 1;
+        
+            else {
+                current_direction = INPUT_LEFT;
+                snake_p->snake_direction = current_direction;
+            
+                if(cells[curr_snake_coord_first - 1] == FLAG_FOOD){
+                    int curr_snake_coord_first_local = *((int*)get_first(snake_p->snake_coordinates)); 
+                    if (growing == 1) {
+                        g_score++; // Eating increases score
+                        curr_snake_coord_first_local--; 
+                        cells[curr_snake_coord_first_local] = FLAG_SNAKE;
+                        insert_first(&(snake_p->snake_coordinates), &curr_snake_coord_first_local, sizeof(int));
+                        place_food(cells, width, height); // Replaces food
+                    }
+
+                    else if (growing == 0) { 
+                        g_score++; // Eating increases score
+                        place_food(cells, width, height); // Replaces food
+                    }
+                }
+
+                else { 
+                    int curr_snake_coord_first_local = *((int*)get_first(snake_p->snake_coordinates)); 
+                    curr_snake_coord_first_local--; //still decreasing the position pointer
+                    cells[curr_snake_coord_last] = FLAG_PLAIN_CELL; //if its not food, the snake will move one to the left
+                    cells[curr_snake_coord_first_local] = FLAG_SNAKE; //the -1 position is a snake
+                    insert_first(&(snake_p->snake_coordinates), &curr_snake_coord_first_local, sizeof(int));
+                    void* to_remove = remove_last(&(snake_p->snake_coordinates));
+                    free(to_remove);
+                }
+            }
         }
+    }
+
+
+
+
+
+
 
         // New Snake Position
-        int new_cell = (width * (g_snake_row)) + g_snake_column;
+        int new_cell = *((int*)get_first(snake_p->snake_coordinates));
 
         if (cells[new_cell] == FLAG_WALL || cells[new_cell] == FLAG_SNAKE) {
             g_game_over = 1;
             return;
         }
+
         else if (cells[new_cell] == FLAG_FOOD) {
             g_score++; //Ate food, should be more
             cells[old_cell] = FLAG_PLAIN_CELL;
             cells[new_cell] = FLAG_SNAKE;
             place_food(cells, width, height); //Place new food
         }
+
+
         else {
             cells[old_cell] = FLAG_PLAIN_CELL;
             cells[new_cell] = FLAG_SNAKE;

@@ -76,18 +76,22 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
     // TODO: implement!
     enum board_init_status board;
     if (board_rep == NULL){
-        g_snake_column = 2;
-        g_snake_row = 2;
-        g_direction = INPUT_RIGHT; 
+        // g_snake_column = 2;
+        // g_snake_row = 2;
+        // g_direction = INPUT_RIGHT; 
         g_game_over = 0;
         g_score = 0;
+        int positionxy = 42; //CAN IT BE SOMETHING ELSE RATHER THAN 42?
+        snake_p->snake_positionxy = NULL;
+        (insert_first(&(snake_p->snake_coordinates),&positionxy, sizeof(positionxy)));
+        snake_p->snake_direction = INPUT_NONE;
         board = initialize_default_board(cells_p, width_p, height_p);
         place_food(*cells_p, *width_p, *height_p);
     }
     else {
         g_game_over = 0;
         g_score = 0;
-        g_direction = INPUT_RIGHT;
+        snake_p->snake_direction = INPUT_NONE;
         board = decompress_board_str(cells_p, width_p, height_p, snake_p, board_rep);
         place_food(*cells_p, *width_p, *height_p);
     }
@@ -156,11 +160,10 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
                 return INIT_ERR_WRONG_SNAKE_NUM;
             }
             else {
-                printf("%d\n", column_count);
-                printf("%d\n", row_count);
-                printf("%d\n", where_in_array);
-                g_snake_column = column_count; //horizontal position of snake (when used as index, position 3 (0,1,2,3))
-                g_snake_row = row_count - 1; 
+                int positionxy = total_count;
+                (insert_first(&(snake_p->snake_coordinates),&positionxy, sizeof(positionxy)));
+                // g_snake_column = column_count; //horizontal position of snake (when used as index, position 3 (0,1,2,3))
+                // g_snake_row = row_count - 1; 
                 cells[where_in_array] = FLAG_SNAKE;
                 where_in_array++;              
             }
