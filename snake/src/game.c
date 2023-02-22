@@ -251,6 +251,10 @@ void update(int* cells, size_t width, size_t height, snake_t* snake_p,
         
         // Dealing with extra cases
 
+        if (input == current_direction) {
+            input = INPUT_NONE;
+        }
+
         //If the snake is growing and its size (has more than 1 coordinate) is bigger than 1:
         // Make sure that the snake cant turn around and 'overlap' with the rest of the body
         // As per instructions: In the actual snake game, if the snake is length 2 or longer and immediately tries to go back the way it came (backing into itself), the movement 
@@ -401,5 +405,6 @@ void read_name(char* write_into) {
  */
 void teardown(int* cells, snake_t* snake_p) {
     free(cells);
-    free(snake_p->snake_coordinates);
+    //free(snake_p->snake_coordinates);
+
 }

@@ -2,8 +2,14 @@
 
 ## Design Overview:
 
-Snake game where a snake can be moved with the arrow buttons (up, down , left, right), eating food to increase score and grow (depending on the level).
+Welcome to my Snake game!
+
+Move the snake with the arrow buttons (up, down , left, right), eating food to increase score and grow (depending on the level).
+
+You can use custom boards to play.
+
 Try not to touch the walls!
+
 Good Luck :)
 
 ## Collaborators:
@@ -73,6 +79,16 @@ b) Discussion:
     interests in the small differences the change makes for efficiency and sustainability, making those whose languages may not be as precise the ultimate losers of the situation.
 
 ## Extra Credit attempted:
+
+Interesting Level Design:
+
+TASK: Recreate a Brown building’s floorplan as a level
+
+Salomon Auditorium floorplan (Stage with floor room and stairs for lecturer, seats on the bottom floor, balcony seats and lights/projectors obstructing the way)
+"B20x30|W30|W3E3W6E1S1E5W11|W15E1W14|W4E22W4|W1E28W1|W6E2W13E2W7|W1E28W1|W6E2W13E2W7|W1E28W1|W6E2W13E2W7|W1E28W1|W6E2W13E2W7|W1E28W1|W6E2W13E2W7|W1E28W1|W30|W1E1W2E8W5E12W1|W6E2W13E2W7|W1E28W1|W6E2W13E2W7"
+
+Barus and Holley Building:
+"B21x40|W40|W1E12W1E7W1E14W1E2W1|W1E2W1w5W1E3W9E14W1E2W1|W1E2W5w1W1E3W1E3W1E3W1E14W1E2W1|W1E2W7E3W1E2W3E2W1E14W1E2W1|W1E2W7E3W1E2w1W2E2W1E3w3E4w3E1W1E2W1|W1E12W1E3W1E3W1E4w1E6w1E2W1E2W1|W1E38W1|W9E2W29|W8E31W1|W8E31W1|W7E32W1|W7E3W26E3W1|W6E4W26E3W1|W6E33W1|W5E7W4E3W4E16W1|W5E6W1E4W1E1W1E4W1E15W1|W4E6W1E6W1E6W1E14W1|W4E7W1E4W1E1W1E4W1E10S1E4W1|W3E9W4E3W4E16W1|W40"
 
 ## How long did it take to complete Snake?
 
