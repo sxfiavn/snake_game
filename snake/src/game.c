@@ -271,10 +271,10 @@ void update(int* cells, size_t width, size_t height, snake_t* snake_p,
         }
 
         //Handling Walls (game over)
-        if (((cells[curr_snake_coord_first + width] == FLAG_WALL) && input == INPUT_DOWN) || //(((input == INPUT_DOWN) || current_direction == INPUT_DOWN))) ||
-            ((cells[curr_snake_coord_first - width] == FLAG_WALL) &&  input == INPUT_UP) || // ((current_direction == INPUT_UP) || (input == INPUT_UP))) ||
-            ((cells[curr_snake_coord_first + 1] == FLAG_WALL) && input == INPUT_RIGHT) || //((current_direction == INPUT_RIGHT) || (input == INPUT_RIGHT))) ||
-            ((cells[curr_snake_coord_first - 1] == FLAG_WALL) && input == INPUT_LEFT))  //((current_direction == INPUT_LEFT) || (input == INPUT_LEFT)))) {
+        if (((cells[curr_snake_coord_first + width] == FLAG_WALL) && input == INPUT_DOWN) || 
+            ((cells[curr_snake_coord_first - width] == FLAG_WALL) &&  input == INPUT_UP) || 
+            ((cells[curr_snake_coord_first + 1] == FLAG_WALL) && input == INPUT_RIGHT) || 
+            ((cells[curr_snake_coord_first - 1] == FLAG_WALL) && input == INPUT_LEFT))
             { 
             g_game_over = 1;
             return;
@@ -283,9 +283,6 @@ void update(int* cells, size_t width, size_t height, snake_t* snake_p,
         if (input == INPUT_NONE) {
             //input = *((int*)get_first(snake_p->snake_direction)); //If not, should keep moving to where it was before. 
             
-
-
-
             if (current_direction == INPUT_DOWN) {
                 if ((cells[curr_snake_coord_first + width] == FLAG_WALL)) {
                     g_game_over = 1;
@@ -323,22 +320,22 @@ void update(int* cells, size_t width, size_t height, snake_t* snake_p,
         }
 
         //When input from user is downwards key
-        if (input == INPUT_DOWN){
+        if (input == INPUT_DOWN) {
             update_down_helper(curr_snake_coord_first, curr_snake_coord_last, current_direction, growing, width, snake_p, cells, height);
         }
 
         //Case when user is clicking the upwards arrow button
-        if (input == INPUT_UP){
+        if (input == INPUT_UP) {
             update_up_helper(curr_snake_coord_first, curr_snake_coord_last, current_direction, growing, width, snake_p, cells, height);
         }
             
         //Case when user is clicking the right button
-        if (input == INPUT_RIGHT){
+        if (input == INPUT_RIGHT) {
             update_right_helper(curr_snake_coord_first, curr_snake_coord_last, current_direction, growing, width, snake_p, cells, height);
         }
 
         //Case when the user is clicking the left arrow
-        if(input == INPUT_LEFT){
+        if(input == INPUT_LEFT) {
             update_left_helper(curr_snake_coord_first, curr_snake_coord_last, current_direction, growing, width, snake_p, cells, height);
         }
 
@@ -374,8 +371,26 @@ void place_food(int* cells, size_t width, size_t height) {
 void read_name(char* write_into) {
     // TODO: implement! (remove the call to strcpy once you begin your
     // implementation)
-    strcpy(write_into, "placeholder");
+    //strcpy(write_into, "placeholder");
+
+    //Print Out Prompt For User
+    printf("Name >\n");
+
+    //To read their response (first input is 0: indicating should read it as std input)
+    int response = (int)read(0, write_into, 1000); 
+
+    //While their response is invalid
+    while (response == 1) {
+        printf("Name Invalid: must be longer than 0 characters.\n"); //throw message
+
+        //Prompt to their input again
+        printf("Name >\n");
+        response = (int)read(0, write_into, 1000);
+    }
+
+    write_into[response - 1] = '\0'; //A Null byte, indicate end of string
 }
+
 
 /** Cleans up on game over — should free any allocated memory so that the
  * LeakSanitizer doesn't complain.

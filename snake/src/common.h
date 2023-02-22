@@ -40,6 +40,12 @@ extern int g_score;      // game score: 1 point for every food eaten
 // extern int g_snake_column; //horizontal position of snake
 // extern int g_snake_row; //vertical position of snake
 
+// Variables"
+// g_name_len:
+// g_name: 
+extern int g_name_len;
+extern char* g_name;
+
 /** Snake struct. This struct is not needed until part 2!
  * Fields:
  *  - None yet!

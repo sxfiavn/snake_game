@@ -128,10 +128,16 @@ int main(int argc, char** argv) {
 
     // Read in the player's name & save its name and length
     // TODO: Implement (in Part 2B)
-    //char name_buffer[1000];
-   // read_name(name_buffer);
+    // char name_buffer[1000];
+    // read_name(name_buffer);
     // ? save name_buffer ?
     // ? save mbslen(name_buffer) ?
+
+    char name_buffer[1000];
+    read_name(name_buffer);
+    //adding game_over.c global variables
+    g_name = name_buffer;
+    g_name_len = mbslen(name_buffer); 
 
     // TODO: Remove this message, uncomment the code below this message
     //       and implement Part 1A here.

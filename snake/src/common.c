@@ -9,6 +9,10 @@ int g_score;      // game score: 1 point for every food eaten
 // int g_snake_column; //horizontal position of snake (when used as index, position 3 (0,1,2,3))
 // int g_snake_row; //vertical position of snake (same as above with index)
 
+//game_over.c
+int g_name_len;
+char* g_name;
+
 /** Sets the seed for random number generation.
  * Arguments:
  *  - `seed`: the seed.
