@@ -24,5 +24,42 @@
  */
 size_t mbslen(const char* bytes) {
     // TODO: implement!
-    return 0;
+    //return 0;
+    
+    if (!bytes) {  // if null
+	    return -1; 
+    }
+
+    char single = 0b10000000;
+    char two = 0b11100000;
+    char three = 0b11110000;
+    char four = 0b11111000;
+
+    int UTF_count = 0;
+
+    int i = 0;
+
+    while (bytes[i] != '\0' ) { //While we haven't encountered NUL
+
+        unsigned char unsignedb = (unsigned char)bytes[i];
+
+        if ((single & unsignedb) == 0b0) {
+            i++;
+        }
+        if ((two & unsignedb) == 0b11000000) {
+            i+=2;
+        }
+        if ((three & unsignedb) == 0b11100000) {
+            i+=3;
+        }
+        if ((four & unsignedb) == 0b11110000) {
+            i+=4;
+        }
+
+        UTF_count++;
+
+    }
+
+    return UTF_count;
 }
+
