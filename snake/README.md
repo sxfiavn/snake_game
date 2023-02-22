@@ -18,7 +18,7 @@ Sofia Vaca Narvaja Cordoba
 
 ## Responsible Computing:
 
-Partner CS login: oweiss (Ottocaro Weiss)
+Partner CS login: oweiss2 (Ottocaro Weiss)
 
 1. Who founded the Consortium? Who is represented among the current members, and how might that affect decisions being made for Unicode?
 
