@@ -50,7 +50,8 @@ typedef struct snake {
     enum input_key snake_direction; // direction of the snake
     // int g_snake_column; //horizontal position of snake
     // int g_snake_row; //vertical position of snake
-    node_t* snake_coordinates;
+    node_t* snake_coordinates; 
+    // Better to have it as a single linked list compared to row&column. 
 } snake_t;
 
 void set_seed(unsigned seed);

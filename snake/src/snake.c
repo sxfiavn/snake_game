@@ -128,8 +128,8 @@ int main(int argc, char** argv) {
 
     // Read in the player's name & save its name and length
     // TODO: Implement (in Part 2B)
-    // char name_buffer[1000];
-    // read_name(name_buffer);
+    //char name_buffer[1000];
+   // read_name(name_buffer);
     // ? save name_buffer ?
     // ? save mbslen(name_buffer) ?
 
@@ -150,7 +150,7 @@ int main(int argc, char** argv) {
 
     while (g_game_over != 1) {
         usleep(300000);
-        update(cells, width, height, NULL, get_input(), 0);
+        update(cells, width, height, &snake, get_input(), snake_grows);
         render_game(cells, width, height);
     }
     end_game(cells, width, height, &snake);

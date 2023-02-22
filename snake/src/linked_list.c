@@ -73,7 +73,8 @@ void* get_last(node_t* head_list) {
  * returns nothing
  */
 void insert_first(node_t** head_list, void* to_add, size_t size) { 
-    if (!to_add) { // to_add is null
+    
+  if (!to_add) {
     return;
   }
 
@@ -83,21 +84,23 @@ void insert_first(node_t** head_list, void* to_add, size_t size) {
   memcpy(new_data, to_add, size);
   new_element->data = new_data;
 
-  if (!(*head_list)) {  // means the list is empty
-    *head_list = new_element;
-    new_element->prev = NULL;
-    new_element->next = NULL;
+
+  if (!(*head_list)) {  // if the list is emoty 
+    *head_list = new_element; 
+    new_element->prev = NULL; // only element in the list
+    new_element->next = NULL; // ^^
     return;
   }
 
-  node_t* curr = *head_list; //pointer to the head of the list
-
-  curr->prev = new_element; 
+  //To add it to a non-empty list
+  node_t* curr = *head_list; //current node
+  curr->prev = new_element;
   new_element->next = curr;
   new_element->prev = NULL;
-  *head_list = new_element; // pointer to the head of the list -> new element
-  
-  return; }
+  *head_list = new_element; 
+  return; 
+
+}
 
 /**
  * inserts element at the end of the linked list
@@ -107,7 +110,7 @@ void insert_first(node_t** head_list, void* to_add, size_t size) {
  *
  * returns nothing
  */
- //Edited
+
 void insert_last(node_t** head_list, void* to_add, size_t size) {
   if (!to_add) {
     return;
@@ -117,7 +120,7 @@ void insert_last(node_t** head_list, void* to_add, size_t size) {
   memcpy(new_data, to_add, size);
   new_element->data = new_data;
 
-  if (!(*head_list)) {  // means the list is empty
+  if (!(*head_list)) { 
     *head_list = new_element;
     new_element->prev = NULL;
     new_element->next = NULL;
@@ -145,16 +148,16 @@ void insert_last(node_t** head_list, void* to_add, size_t size) {
  */
 void* get(node_t* head_list, int index) { 
 
-    if (!head_list) { // if empty list
+    if (!head_list) { 
         return NULL;
       }
     
-    if(index<0){ //if index is negative
+    if(index<0){ 
       return NULL;
     }
 
     node_t* curr = head_list;
-    int index_count = 0; // keep track of which index we are at as we loop
+    int index_count = 0; 
     while(curr){
       if(index_count == index){
         return curr->data;
@@ -177,11 +180,11 @@ void* get(node_t* head_list, int index) {
  * returns 1 on success and 0 on failure of removing an element from the linked
  * list
  */
- // trying to edit
+
 int remove_element(node_t **head_list, void *to_remove, size_t size) {
 
   if (!(*head_list)) {
-    return 0;  // element doesn't exist
+    return 0; 
   }
 
      if(!(to_remove)){
@@ -192,7 +195,7 @@ int remove_element(node_t **head_list, void *to_remove, size_t size) {
   node_t* curr = *head_list;
 
   while (curr) {
-    if (!memcmp(curr->data, to_remove, size)) {  // found the element to remove
+    if (!memcmp(curr->data, to_remove, size)) {  
     node_t* removing = curr->data;
       if (curr->next) {
         curr->next->prev = curr->prev;
@@ -217,7 +220,7 @@ int remove_element(node_t **head_list, void *to_remove, size_t size) {
  *
  * returns nothing
  */
- // edited
+
 void reverse_helper(node_t** head_list) {
   if (!(*head_list)) { // empty list
     return;  
@@ -259,7 +262,7 @@ void reverse(node_t** head_list) {
  * returns the void pointer of the element removed
  *
  */
- //edited
+
 void* remove_first(node_t** head_list) {
   if (!(*head_list)) {
     return NULL;
@@ -295,19 +298,19 @@ void* remove_last(node_t** head_list) {
   node_t* curr = *head_list;
   
 
-if(!curr->next){ // if it is a single element list
+if(!curr->next){ 
   void* curr_dvoid_p = curr->data;
   free(curr);
   *head_list = NULL;
   return curr_dvoid_p; 
 }
 
-  while(curr->next){ // go until the last element
+  while(curr->next){ 
     curr = curr->next;
   }
 
   void* curr_dvoid_p = curr->data;
-  curr->prev->next = NULL; // take the last element out of the way!
+  curr->prev->next = NULL; 
 
   free(curr);
   

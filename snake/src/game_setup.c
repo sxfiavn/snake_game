@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 // Some handy dandy macros for decompression
 #define E_CAP_HEX 0x45
@@ -81,17 +82,17 @@ enum board_init_status initialize_game(int** cells_p, size_t* width_p,
         // g_direction = INPUT_RIGHT; 
         g_game_over = 0;
         g_score = 0;
-        int positionxy = 42; //CAN IT BE SOMETHING ELSE RATHER THAN 42?
-        snake_p->snake_positionxy = NULL;
-        (insert_first(&(snake_p->snake_coordinates),&positionxy, sizeof(positionxy)));
-        snake_p->snake_direction = INPUT_NONE;
+        snake_p->snake_coordinates = NULL;
+        int positionxy = 42; //For 3rd column on the 3rd row
+        (insert_first(&(snake_p->snake_coordinates),&positionxy, sizeof(int)));
+        snake_p->snake_direction = INPUT_RIGHT; //no default direction w board
         board = initialize_default_board(cells_p, width_p, height_p);
         place_food(*cells_p, *width_p, *height_p);
     }
     else {
         g_game_over = 0;
         g_score = 0;
-        snake_p->snake_direction = INPUT_NONE;
+        snake_p->snake_direction = INPUT_RIGHT; //no default direction w board
         board = decompress_board_str(cells_p, width_p, height_p, snake_p, board_rep);
         place_food(*cells_p, *width_p, *height_p);
     }
@@ -160,12 +161,29 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
                 return INIT_ERR_WRONG_SNAKE_NUM;
             }
             else {
-                int positionxy = total_count;
-                (insert_first(&(snake_p->snake_coordinates),&positionxy, sizeof(positionxy)));
+                int positionxy = where_in_array;
+                // printf("%d\n", row_count);
+                // printf("%d\n", column_count);
+                // printf("%d\n", positionxy);
+                // printf("%d\n", where_in_array);
+
+                // printf("%ls\n", &positionxy);
+                
+                //where in array = (row_count * width) + column_coumt
+
+                cells[where_in_array] = FLAG_SNAKE;
+                printf("%d\n", cells[where_in_array]);
+
+                snake_p->snake_coordinates = NULL;
+                //Insert position of the head of the snake at the start of the snake coordinate's list
+                (insert_first(&(snake_p->snake_coordinates), &positionxy, sizeof(int)));
+
                 // g_snake_column = column_count; //horizontal position of snake (when used as index, position 3 (0,1,2,3))
                 // g_snake_row = row_count - 1; 
-                cells[where_in_array] = FLAG_SNAKE;
-                where_in_array++;              
+
+
+                where_in_array++; 
+                column_count++;             
             }
         }
 
@@ -179,7 +197,9 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
                 for (int a = where_in_array; a < (s_number + where_in_array); ++a) {
                     cells[a] = FLAG_WALL;
                 }
+                //printf("%d\n", where_in_array);
                 where_in_array = s_number + where_in_array;
+                //printf("%d\n", where_in_array);
             }
         }
 
@@ -193,7 +213,9 @@ enum board_init_status decompress_board_str(int** cells_p, size_t* width_p,
                 for (int a = where_in_array; a < (s_number + where_in_array); ++a) {
                     cells[a] = FLAG_PLAIN_CELL;
                 }
+                //printf("%d\n", where_in_array);
                 where_in_array = s_number + where_in_array;
+                //printf("%d\n", where_in_array);
             }
         }
 
