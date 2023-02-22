@@ -23,7 +23,7 @@ void update_down_helper(int curr_snake_coord_first, int curr_snake_coord_last, e
 
         int curr_snake_coord_first_local = *((int*)get_first(snake_p->snake_coordinates)); 
 
-        if(cells[curr_snake_coord_first_local - width] == FLAG_FOOD) {
+        if(cells[curr_snake_coord_first_local + width] == FLAG_FOOD) {
             
             if (snake_grows == 1) {
                 g_score++; // Eating increases score
@@ -34,6 +34,9 @@ void update_down_helper(int curr_snake_coord_first, int curr_snake_coord_last, e
             }
 
             else if (snake_grows == 0) { 
+                g_score++; // Eating increases score
+                place_food(cells, width, height);
+
                 curr_snake_coord_first_local = curr_snake_coord_first_local + width;
                 cells[curr_snake_coord_first_local] = FLAG_SNAKE;
                 cells[curr_snake_coord_last] = FLAG_PLAIN_CELL;
@@ -42,8 +45,7 @@ void update_down_helper(int curr_snake_coord_first, int curr_snake_coord_last, e
                 void* to_remove = remove_last(&(snake_p->snake_coordinates));
                 free(to_remove);
                 
-                g_score++; // Eating increases score
-                place_food(cells, width, height);
+
             }
         }
 
@@ -86,6 +88,8 @@ void update_up_helper(int curr_snake_coord_first, int curr_snake_coord_last, enu
             }
 
             else if (snake_grows == 0) { 
+                g_score++; // Eating increases score
+                place_food(cells, width, height);
                 curr_snake_coord_first_local = curr_snake_coord_first_local - width;
                 cells[curr_snake_coord_first_local] = FLAG_SNAKE;
                 cells[curr_snake_coord_last] = FLAG_PLAIN_CELL;
@@ -93,9 +97,6 @@ void update_up_helper(int curr_snake_coord_first, int curr_snake_coord_last, enu
 
                 void* to_remove = remove_last(&(snake_p->snake_coordinates));
                 free(to_remove);
-                
-                g_score++; // Eating increases score
-                place_food(cells, width, height);
             }
         }
 
@@ -137,6 +138,9 @@ void update_right_helper(int curr_snake_coord_first, int curr_snake_coord_last, 
                 place_food(cells, width, height); // Replaces food
             }
             else if (snake_grows == 0) { 
+                g_score++; // Eating increases score
+                place_food(cells, width, height);
+
                 curr_snake_coord_first_local++; 
                 cells[curr_snake_coord_first_local] = FLAG_SNAKE;
                 cells[curr_snake_coord_last] = FLAG_PLAIN_CELL;
@@ -144,9 +148,6 @@ void update_right_helper(int curr_snake_coord_first, int curr_snake_coord_last, 
 
                 void* to_remove = remove_last(&(snake_p->snake_coordinates));
                 free(to_remove);
-
-                g_score++; // Eating increases score
-                place_food(cells, width, height); // Replaces food
             }
         }
 
@@ -189,6 +190,10 @@ void update_left_helper(int curr_snake_coord_first, int curr_snake_coord_last, e
             }
 
             else if (snake_grows == 0) { 
+                g_score++; // Eating increases score
+                place_food(cells, width, height);
+
+
                 curr_snake_coord_first_local--;
                 cells[curr_snake_coord_first_local] = FLAG_SNAKE;
                 cells[curr_snake_coord_last] = FLAG_PLAIN_CELL;
@@ -196,9 +201,6 @@ void update_left_helper(int curr_snake_coord_first, int curr_snake_coord_last, e
 
                 void* to_remove = remove_last(&(snake_p->snake_coordinates));
                 free(to_remove);
-                
-                g_score++; // Eating increases score
-                place_food(cells, width, height); // Replaces food
             }
         }
 
