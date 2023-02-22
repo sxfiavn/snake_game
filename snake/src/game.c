@@ -12,7 +12,7 @@
 
 void update_down_helper(int curr_snake_coord_first, int curr_snake_coord_last, enum input_key current_direction, int snake_grows, size_t width, snake_t* snake_p, int* cells, size_t height) {
 
-    if((cells[curr_snake_coord_first + (int)width] == FLAG_SNAKE) || (curr_snake_coord_last == (curr_snake_coord_first + (int)width))) {
+    if((cells[curr_snake_coord_first + (int)width] == FLAG_SNAKE)  && (curr_snake_coord_last != (curr_snake_coord_first + (int)width))) {
         g_game_over = 1;
         return;
     } 
@@ -66,7 +66,7 @@ void update_down_helper(int curr_snake_coord_first, int curr_snake_coord_last, e
 
 void update_up_helper(int curr_snake_coord_first, int curr_snake_coord_last, enum input_key current_direction, int snake_grows, size_t width, snake_t* snake_p, int* cells, size_t height) {
 
-    if((cells[curr_snake_coord_first - (int)width] == FLAG_SNAKE) || (curr_snake_coord_last == (curr_snake_coord_first - (int)width))) {
+    if((cells[curr_snake_coord_first - (int)width] == FLAG_SNAKE) && (curr_snake_coord_last != (curr_snake_coord_first - (int)width))) {
         g_game_over = 1;
         return;
     } 
@@ -117,7 +117,7 @@ void update_up_helper(int curr_snake_coord_first, int curr_snake_coord_last, enu
 
 
 void update_right_helper(int curr_snake_coord_first, int curr_snake_coord_last, enum input_key current_direction, int snake_grows, size_t width, snake_t* snake_p, int* cells, size_t height) {
-    if((cells[curr_snake_coord_first + 1] == FLAG_SNAKE) || (curr_snake_coord_last == (curr_snake_coord_first + 1))) {
+    if((cells[curr_snake_coord_first + 1] == FLAG_SNAKE) && (curr_snake_coord_last != (curr_snake_coord_first + 1))) {
         g_game_over = 1;
         return;
     } 
@@ -168,7 +168,7 @@ void update_right_helper(int curr_snake_coord_first, int curr_snake_coord_last, 
 
 void update_left_helper(int curr_snake_coord_first, int curr_snake_coord_last, enum input_key current_direction, int snake_grows, size_t width, snake_t* snake_p, int* cells, size_t height) {
     //Check if the head is a snake and if the last and first position have the same coordinates (they touch), game over. 
-    if((cells[curr_snake_coord_first - 1] == FLAG_SNAKE) || (curr_snake_coord_last == (curr_snake_coord_first - 1))){ //so that they dont overlap
+    if((cells[curr_snake_coord_first - 1] == FLAG_SNAKE) && (curr_snake_coord_last != (curr_snake_coord_first - 1))){ //so that they dont overlap
         g_game_over = 1;
         return;
     }    
@@ -271,35 +271,53 @@ void update(int* cells, size_t width, size_t height, snake_t* snake_p,
         }
 
         //Handling Walls (game over)
-        if 
-        (((cells[curr_snake_coord_first + width] == FLAG_WALL) && ((current_direction == INPUT_DOWN) || (input == INPUT_DOWN))) ||
-        ((cells[curr_snake_coord_first - width] == FLAG_WALL) && ((current_direction == INPUT_UP) || (input == INPUT_UP))) ||
-        ((cells[curr_snake_coord_first + 1] == FLAG_WALL) && ((current_direction == INPUT_RIGHT) || (input == INPUT_RIGHT))) ||
-        ((cells[curr_snake_coord_first - 1] == FLAG_WALL) && ((current_direction == INPUT_LEFT) || (input == INPUT_LEFT)))
-        ) {
+        if (((cells[curr_snake_coord_first + width] == FLAG_WALL) && input == INPUT_DOWN) || //(((input == INPUT_DOWN) || current_direction == INPUT_DOWN))) ||
+            ((cells[curr_snake_coord_first - width] == FLAG_WALL) &&  input == INPUT_UP) || // ((current_direction == INPUT_UP) || (input == INPUT_UP))) ||
+            ((cells[curr_snake_coord_first + 1] == FLAG_WALL) && input == INPUT_RIGHT) || //((current_direction == INPUT_RIGHT) || (input == INPUT_RIGHT))) ||
+            ((cells[curr_snake_coord_first - 1] == FLAG_WALL) && input == INPUT_LEFT))  //((current_direction == INPUT_LEFT) || (input == INPUT_LEFT)))) {
+            { 
             g_game_over = 1;
             return;
-        }
+            }
      
         if (input == INPUT_NONE) {
             //input = *((int*)get_first(snake_p->snake_direction)); //If not, should keep moving to where it was before. 
             
+
+
+
             if (current_direction == INPUT_DOWN) {
+                if ((cells[curr_snake_coord_first + width] == FLAG_WALL)) {
+                    g_game_over = 1;
+                    return;
+                }
                 update_down_helper(curr_snake_coord_first, curr_snake_coord_last, current_direction, growing, width, snake_p, cells, height);
             }
 
             //Case when user is clicking the upwards arrow button
             if (current_direction == INPUT_UP) {
+                if ((cells[curr_snake_coord_first - width] == FLAG_WALL)) {
+                    g_game_over = 1;
+                    return;
+                }
                 update_up_helper(curr_snake_coord_first, curr_snake_coord_last, current_direction, growing, width, snake_p, cells, height);
             }
                 
             //Case when user is clicking the right button
             if (current_direction == INPUT_RIGHT) {
+                if ((cells[curr_snake_coord_first + 1] == FLAG_WALL)) {
+                    g_game_over = 1;
+                    return;
+                }
                 update_right_helper(curr_snake_coord_first, curr_snake_coord_last, current_direction, growing, width, snake_p, cells, height);
             }
 
             //Case when the user is clicking the left arrow
             if(current_direction == INPUT_LEFT){
+                if ((cells[curr_snake_coord_first - 1] == FLAG_WALL)) {
+                    g_game_over = 1;
+                    return;
+                }
                 update_left_helper(curr_snake_coord_first, curr_snake_coord_last, current_direction, growing, width, snake_p, cells, height);
             }
         }
