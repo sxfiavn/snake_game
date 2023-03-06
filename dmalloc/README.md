@@ -1,5 +1,4 @@
-Project 2: DMalloc
-===================
+# Project 2: DMalloc
 
 <!-- TODO: Fill this out. -->
 
@@ -12,3 +11,5 @@ Project 2: DMalloc
 ## How long did it take to complete DMalloc?
 
 <!-- Enter an approximate number of hours that you spent actively working on the project. -->
+
+7 Hours :)
