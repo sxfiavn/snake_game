@@ -351,5 +351,5 @@ void *drealloc(void *ptr, size_t sz, const char *file, long line)
             pointerM[ptr].memory_size += need_to_add;
         }
     }
-    return ptr
+    return ptr;
 }
