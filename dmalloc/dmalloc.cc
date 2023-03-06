@@ -72,7 +72,14 @@ void *dmalloc(size_t sz, const char *file, long line)
     // should still return a pointer to the “payload” of the block, i.e., to the space
     // after the metadata.
 
-    if (data_index != NULL)
+    // secret value to check
+
+    if (!data_index)
+    {
+        malloc_stats.nfail++;
+        malloc_stats.fail_size += sz;
+    }
+    else
     {
         // Active stats
         malloc_stats.nactive++;
@@ -81,6 +88,14 @@ void *dmalloc(size_t sz, const char *file, long line)
         // Total stats
         malloc_stats.ntotal++;
         malloc_stats.total_size += sz;
+
+        // Pointer to the Metadata
+        pointerM[data_index] = {
+            .line = line,
+            .file = file,
+            .freeing_count = 0,
+            .memory_size = sz,
+        };
 
         // if (data_index > malloc_stats.heap_max)
         // {
@@ -106,15 +121,7 @@ void *dmalloc(size_t sz, const char *file, long line)
         // malloc_stats.fail_size = 0;   // number of bytes in failed allocation attempts
         // malloc_stats.heap_min = NULL; // smallest address in any region ever allocated
         // malloc_stats.heap_max = 0;    // largest address in any region ever allocated
-
-        // Pointer to the Metadata
-        pointerM[data_index] = {
-            .line = line,
-            .file = file,
-            .freeing_count = 0,
-            .memory_size = sz,
-        };
-    };
+    }
 
     metadata now{
         .line = line,
@@ -123,14 +130,13 @@ void *dmalloc(size_t sz, const char *file, long line)
         .memory_size = sz,
     };
 
-    // Update Metadata
-    *(metadata *)metadata_pointer = now;
-
-    // secret value to check
     for (int i = 0; i < 200; i++)
     {
         *((char *)data_index + i + sz) = 'r'; // Fill each with a letter
     }
+
+    // Update Metadata
+    *(metadata *)metadata_pointer = now;
 
     return (data_index);
 }
@@ -162,13 +168,37 @@ void dfree(void *ptr, const char *file, long line)
 
     if (ptr)
     {
-        size_t metadata_size = pointerM[ptr].memory_size;
+        // size_t metadata_size = pointerM[ptr].memory_size;
 
         // Invalid Pointer (out of bounds)
         if ((uintptr_t)ptr > malloc_stats.heap_max || malloc_stats.heap_min > (uintptr_t)ptr)
         {
             fprintf(stderr, "MEMORY BUG: %s:%ld: invalid free of pointer %p, not in heap", file, line, ptr);
             abort();
+        }
+
+        // Tests 21 through 23
+        //! Bad pointer ??{0x\w+}=ptr??
+        //! MEMORY BUG???: invalid free of pointer ??ptr??, not allocated
+
+        //  Expected `MEMORY BUG: test???.cc:10: invalid free of pointer ??ptr??, not allocated out
+        //  Got `MEMORY BUG: test023.cc:10: detected wild write during free of pointer 0x2784ef4f`
+        // Tests 31 through 33
+        if (pointerM.count(ptr) == 0) // If count 0
+        {
+            for (auto const &[key, value] : pointerM)
+            {
+                if (ptr > key && ptr < (((char *)key) + value.memory_size))
+                {
+                    int pointerVSkey = (char *)ptr - ((char *)key);
+                    // fprintf(stderr, "MEMORY BUG???: invalid free of pointer ??ptr??, not allocated\n");
+                    // fprintf(stderr, "MEMORY BUG: test???.cc:%ld: invalid free of pointer ??ptr??, not allocated\n", line);
+                    // fprintf(stderr, "MEMORY BUG: %s:%ld: invalid free of pointer %p, not allocated\n", file, line, ptr);
+                    fprintf(stderr, "MEMORY BUG: %s:%ld: invalid free of pointer %p, not allocated\n", file, line, ptr);
+                    fprintf(stderr, "%s:%ld: %p is %d bytes inside a %ld byte region allocated here", value.file, value.line, ptr, pointerVSkey, value.memory_size);
+                    abort();
+                }
+            }
         }
 
         // Double free
@@ -179,26 +209,7 @@ void dfree(void *ptr, const char *file, long line)
             abort();
         }
 
-        // Tests 21 through 23
-        //! Bad pointer ??{0x\w+}=ptr??
-        //! MEMORY BUG???: invalid free of pointer ??ptr??, not allocated
-        //! ???
-        //  Expected `MEMORY BUG: test???.cc:10: invalid free of pointer ??ptr??, not allocated out
-        //  Got `MEMORY BUG: test023.cc:10: detected wild write during free of pointer 0x2784ef4f`
-        // Tests 31 through 33
-        if (pointerM.count(ptr) == 0) // If count 0
-        {
-            for (auto const &[key, value] : pointerM)
-            {
-                if ((ptr < ((((char *)key) + value.memory_size)) && (ptr > key)))
-                {
-                    int pointerVSkey = ((char *)ptr - ((char *)key));
-                    fprintf(stderr, "MEMORY BUG: %s:%ld: invalid free of pointer %p, not allocated\n", file, line, ptr);
-                    fprintf(stderr, "%s:%ld: %p is %d bytes inside a %ld byte region allocated here", value.file, value.line, ptr, pointerVSkey, value.memory_size);
-                    abort();
-                }
-            }
-        }
+        size_t metadata_size = pointerM[ptr].memory_size; // Threw error if I defined it
 
         if (*(metadata_size + (char *)ptr) != 'r') // If the header is r
         {
@@ -206,6 +217,7 @@ void dfree(void *ptr, const char *file, long line)
             abort();
         }
 
+        // Only if no errors aborted program:
         base_free((char *)ptr - sz2);
         pointerM[ptr].freeing_count++;               // Increase number of time memory has been freed
         malloc_stats.nactive--;                      // Decrease number of allocations active
