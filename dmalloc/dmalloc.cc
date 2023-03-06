@@ -211,7 +211,7 @@ void dfree(void *ptr, const char *file, long line)
 
         size_t metadata_size = pointerM[ptr].memory_size; // Threw error if I defined it
 
-        if (*(metadata_size + (char *)ptr) != 'r') // If the header is r
+        if (*(metadata_size + (char *)ptr) != 'r') // If the header is not r
         {
             fprintf(stderr, "MEMORY BUG: %s:%ld: detected wild write during free of pointer %p", file, line, ptr);
             abort();
@@ -301,6 +301,54 @@ void print_leak_report()
         if (value.freeing_count == 0) // If the memory has neven been freed (aka. is still active)
         {
             printf("LEAK CHECK: %s:%ld: allocated object %p with size %ld\n", value.file, value.line, key, value.memory_size);
+        }
+    }
+}
+
+// Extra Credit
+/// drealloc(ptr, sz, file, line)
+///    Reallocate the dynamic memory pointed to by `ptr` to hold at least
+///    `sz` bytes, returning a pointer to the new block. If `ptr` is
+///    `nullptr`, behaves like `dmalloc(sz, file, line)`. If `sz` is 0,
+///    behaves like `dfree(ptr, file, line)`. The allocation request
+///    was at location `file`:`line`.
+
+void *drealloc(void *ptr, size_t sz, const char *file, long line)
+{
+
+    // Deal with exceptions first
+    if (!ptr)
+    {
+        return dmalloc(sz, file, line);
+    }
+    else if (sz == 0)
+    {
+        dfree(ptr, file, line);
+        return nullptr;
+    }
+    else
+    {
+        /* code */
+        /// Reallocate the dynamic memory pointed to by `ptr` to hold at least
+        ///  `sz` bytes, returning a pointer to the new block.
+        if (pointerM[ptr].memory_size < sz) // If sz its actually bigger than out current size
+        {
+            // Get the difference in sizes
+            size_t need_to_add = sz - pointerM[ptr].memory_size;
+
+            // Check that none of the continuos memory is being used
+
+            size_t metadata_size = pointerM[ptr].memory_size; // Threw error if I defined it
+
+            if (*(metadata_size + (char *)ptr) + need_to_add != 'r')
+            {
+                // If the memory is used, throw this error:
+                fprintf(stderr, "MEMORY BUG: %s:%ld: Trying to overwrite memory through %p, that is currently being occupied", file, line, ptr);
+                abort();
+            }
+
+            // Else, add that memory to the memory size
+            pointerM[ptr].memory_size += need_to_add;
         }
     }
 }
